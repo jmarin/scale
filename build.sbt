@@ -6,11 +6,14 @@ scalaVersion := "2.11.2"
 
 organization := "scale"
 
-scalariformSettings
+scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation", "-feature")
 
-lazy val root = project.in(file(".")).aggregate(core)
+lazy val root = project.in(file(".")).
+  settings(scalariformSettings: _*).
+  aggregate(core)
 
-lazy val core = project.in(file("core"))
+lazy val core = project.in(file("core")).
+  settings(scalariformSettings: _*)
 
 libraryDependencies ++= {
   val specs2Version = "2.3.11"
