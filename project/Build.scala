@@ -4,14 +4,15 @@ import com.typesafe.sbt.SbtScalariform
 
 object BuildSettings {
   val buildOrganization = "scale"
-  val buildVersion = "0.0.1"
+  val buildVersion = "0.0.1-SNAPSHOT"
   val buildScalaVersion = "2.11.2"
 
   val buildSettings = Defaults.defaultSettings ++ SbtScalariform.defaultScalariformSettings ++
   Seq(
     organization := buildOrganization,
     version      := buildVersion,
-    scalaVersion := buildScalaVersion
+    scalaVersion := buildScalaVersion,
+    scalacOptions ++= Seq("-deprecation","-unchecked","-feature")
   )
 
 }
