@@ -17,11 +17,9 @@ object Point {
     Point(geomFactory.createPoint(new jts.Coordinate(x, y, z)))
   }
 
-  implicit def jts2Point(p: jts.Point): Point = apply(p)
-
 }
 
-case class Point(p: jts.Point) {
+case class Point(p: jts.Point) extends Geometry {
 
   val x: Double = p.getX
 
