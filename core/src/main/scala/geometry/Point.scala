@@ -19,12 +19,12 @@ object Point {
 
 }
 
-case class Point(p: jts.Point) extends Geometry {
+case class Point(jtsGeometry: jts.Point) extends Geometry {
 
-  val x: Double = p.getX
+  val x: Double = jtsGeometry.getX
 
-  val y: Double = p.getY
+  val y: Double = jtsGeometry.getY
 
-  val z: Double = p.getCoordinate.z
+  val z: Double = jtsGeometry.getCoordinate.z
 
 }
