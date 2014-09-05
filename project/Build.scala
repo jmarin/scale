@@ -1,20 +1,21 @@
 import sbt._
 import Keys._
-import com.typesafe.sbt.SbtScalariform
+import com.typesafe.sbt.SbtScalariform._
 
 object BuildSettings {
   val buildOrganization = "scale"
   val buildVersion = "0.0.1-SNAPSHOT"
   val buildScalaVersion = "2.11.2"
 
-  val buildSettings = Defaults.defaultSettings ++ SbtScalariform.defaultScalariformSettings ++
-  Seq(
-    organization := buildOrganization,
-    version      := buildVersion,
-    scalaVersion := buildScalaVersion,
-    scalacOptions ++= Seq("-deprecation","-unchecked","-feature")
-  )
-
+  val buildSettings = Defaults.defaultSettings ++ 
+    scalariformSettings ++
+    org.scalastyle.sbt.ScalastylePlugin.Settings ++
+    Seq(
+      organization := buildOrganization,
+      version      := buildVersion,
+      scalaVersion := buildScalaVersion,
+      scalacOptions ++= Seq("-deprecation","-unchecked","-feature")
+    )
 }
 
 object Resolvers {
