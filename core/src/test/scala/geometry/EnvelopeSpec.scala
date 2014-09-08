@@ -25,7 +25,7 @@ class EnvelopeSpec extends Specification {
       env1.centroid must be equalTo (p3)
     }
     "contain its own center" in {
-      env1.intersects(env1.centroid) must be equalTo (true)
+      env1.intersects(env1.centroid) must beTrue
     }
     "intersect with other envelope" in {
       env1 intersection env2 must be equalTo (intEnv)

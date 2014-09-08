@@ -14,12 +14,12 @@ class PointSpec extends Specification {
     "intersect with itself" in {
       val p1 = Point(-77, 39)
       val p2 = Point(-77, 39)
-      p1 intersects p2 must be equalTo (true)
+      p1 intersects p2 must beTrue
     }
     "not intersect with other point" in {
       val p1 = Point(-77, 39)
       val p2 = Point(-76, 39)
-      p1 intersects p2 must be equalTo (false)
+      p1 intersects p2 must beFalse
     }
   }
 
