@@ -7,7 +7,9 @@ class LineSpec extends Specification {
   val p1 = Point(-77, 39)
   val p2 = Point(-76, 40)
   val p3 = Point(-75, 38)
+  val p4 = Point(-77, 39)
   val line = Line(Array(p1, p2, p3))
+  val closedLine = Line(Array(p1, p2, p3, p4))
 
   "A Line" should {
     "be valid" in {
@@ -24,6 +26,10 @@ class LineSpec extends Specification {
     }
     "have a positive length" in {
       line.length must be greaterThan (0)
+    }
+    "report if it is closed or not" in {
+      line.isClosed must beFalse
+      closedLine.isClosed must beTrue
     }
   }
 
