@@ -59,4 +59,8 @@ case class Line(jtsGeometry: jts.LineString) extends Geometry {
     Point(jtsGeometry.getPointN(n))
   }
 
+  def isCoordinate(point: Point): Boolean = {
+    jtsGeometry.isCoordinate(point.jtsGeometry.getCoordinate)
+  }
+
 }

@@ -47,6 +47,10 @@ class LineSpec extends Specification {
     "get nth point" in {
       line.pointAt(2) must be equalTo (p3)
     }
+    "check if point is coordinate" in {
+      line.isCoordinate(p1) must beTrue
+      line.isCoordinate(p5) must beFalse
+    }
     "Serialize to WKT" in {
       line.toWKT must be equalTo ("LINESTRING (-77 39, -76 40, -75 38)")
     }
