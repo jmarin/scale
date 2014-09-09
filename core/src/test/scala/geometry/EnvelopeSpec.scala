@@ -21,6 +21,15 @@ class EnvelopeSpec extends Specification {
       env1.xmax must be equalTo (p2.x)
       env1.ymax must be equalTo (p2.y)
     }
+    "have dimensions when constructed from 4 coordinates" in {
+      val env = Envelope(-77, -76, 39, 40)
+      env.width must be equalTo (1.0)
+      env.height must be equalTo (1.0)
+      env.xmin must be equalTo (p1.x)
+      env.ymin must be equalTo (p1.y)
+      env.xmax must be equalTo (p2.x)
+      env.ymax must be equalTo (p2.y)
+    }
     "have a center" in {
       env1.centroid must be equalTo (p3)
     }
