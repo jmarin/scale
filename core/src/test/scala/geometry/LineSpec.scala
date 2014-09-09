@@ -37,6 +37,13 @@ class LineSpec extends Specification {
       line.isRing must beFalse
       closedLine.isRing must beTrue
     }
+    "compute the reverse" in {
+      val rev = line.reverse
+      rev.startPoint must be equalTo (line.endPoint)
+      rev.endPoint must be equalTo (line.startPoint)
+      rev.length must be equalTo (line.length)
+      rev.isValid must beTrue
+    }
   }
 
 }
