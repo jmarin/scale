@@ -1,5 +1,6 @@
 package geometry
 
+import scala.language.implicitConversions
 import com.vividsolutions.jts.{ geom => jts }
 import jts.GeometryFactory
 import jts.LineString
@@ -9,13 +10,18 @@ object Line {
 
   private val geomFactory = new jts.GeometryFactory
 
-  def apply(points: Array[Point]): Line = {
-    val coords = Util.points2JTSCoordinateArray(points)
-    val coordSequence = new CoordinateArraySequence(coords)
-    val lineString = new LineString(coordSequence, geomFactory)
-    Line(lineString)
+  def apply(points: Point*): Line = {
+    apply(points.toList)
   }
 
+  def apply(points: Traversable[Point]): Line = {
+    Line(geomFactory.
+      createLineString(points.
+        map(_.jtsGeometry.getCoordinate).toArray))
+  }
+  implicit def jtsToLine(jtsGeom: jts.LineString): Line = {
+    apply(jtsGeom)
+  }
 }
 
 case class Line(jtsGeometry: jts.LineString) extends Geometry {
@@ -47,4 +53,9 @@ case class Line(jtsGeometry: jts.LineString) extends Geometry {
   def reverse: Line = {
     Line(jtsGeometry.reverse.asInstanceOf[LineString])
   }
+
+  def pointAt(n: Int): Point = {
+    Point(jtsGeometry.getPointN(n))
+  }
+
 }

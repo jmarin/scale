@@ -44,6 +44,12 @@ class LineSpec extends Specification {
       rev.length must be equalTo (line.length)
       rev.isValid must beTrue
     }
+    "get nth point" in {
+      line.pointAt(2) must be equalTo (p3)
+    }
+    "Serialize to WKT" in {
+      line.toWKT must be equalTo ("LINESTRING (-77 39, -76 40, -75 38)")
+    }
   }
 
 }
