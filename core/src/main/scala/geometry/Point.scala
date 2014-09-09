@@ -31,6 +31,7 @@ object Point {
   implicit def jtsToPoint(jtsGeom: jts.Point): Point = {
     apply(jtsGeom)
   }
+
 }
 
 case class Point(jtsGeometry: jts.Point) extends Geometry {

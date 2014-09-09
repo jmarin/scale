@@ -5,7 +5,7 @@ import jts.Coordinate
 
 object Util {
 
-  def points2JTSCoordinateArray(points: Array[Point]): Array[Coordinate] = {
+  def points2JTSCoordinateArray(points: Traversable[Point]): Traversable[Coordinate] = {
     points.map { point =>
       new Coordinate(point.x, point.y, point.z)
     }

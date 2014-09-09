@@ -16,12 +16,13 @@ object Line {
 
   def apply(points: Traversable[Point]): Line = {
     Line(geomFactory.
-      createLineString(points.
-        map(_.jtsGeometry.getCoordinate).toArray))
+      createLineString(Util.points2JTSCoordinateArray(points).toArray))
   }
+
   implicit def jtsToLine(jtsGeom: jts.LineString): Line = {
     apply(jtsGeom)
   }
+
 }
 
 case class Line(jtsGeometry: jts.LineString) extends Geometry {
