@@ -9,7 +9,7 @@ object Envelope {
       p2.jtsGeometry.asInstanceOf[jts.Point].getCoordinate))
   }
 
-  def apply(xmin: Double, xmax: Double, ymin: Double, ymax: Double): Envelope = {
+  def apply(xmin: Double, ymin: Double, xmax: Double, ymax: Double): Envelope = {
     Envelope(new jts.Envelope(xmin, xmax, ymin, ymax))
   }
 
