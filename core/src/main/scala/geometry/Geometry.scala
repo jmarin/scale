@@ -52,6 +52,14 @@ trait Geometry {
 
   def vertices: Array[jts.Coordinate] = jtsGeometry.getCoordinates
 
+  def intersection(that: Geometry): Geometry = {
+    val result = jtsGeometry.intersection(that.jtsGeometry)
+    result.getGeometryType match {
+      case "Point" => Point(result.asInstanceOf[jts.Point])
+      case "Line" => Line(result.asInstanceOf[jts.LineString])
+    }
+  }
+
   def toWKT: String = jtsGeometry.toText
 
 }
