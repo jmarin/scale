@@ -25,6 +25,11 @@ class PointSpec extends Specification {
       val p2 = Point(-76, 39)
       p1 intersects p2 must beFalse
     }
+    "serialize to WKT" in {
+      val p = Point(-77, 39)
+      p.toWKT must be equalTo ("POINT (-77 39)")
+
+    }
   }
 
 }

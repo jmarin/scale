@@ -27,6 +27,10 @@ object Point {
     val gf = new jts.GeometryFactory(new PrecisionModel, srid)
     Point(gf.createPoint(new jts.Coordinate(x, y, z)))
   }
+
+  implicit def jtsToPoint(jtsGeom: jts.Point): Point = {
+    apply(jtsGeom)
+  }
 }
 
 case class Point(jtsGeometry: jts.Point) extends Geometry {
