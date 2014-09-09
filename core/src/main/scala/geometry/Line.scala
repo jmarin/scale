@@ -16,7 +16,7 @@ object Line {
 
   def apply(points: Traversable[Point]): Line = {
     Line(geomFactory.
-      createLineString(Util.points2JTSCoordinateArray(points).toArray))
+      createLineString(Util.points2JTSCoordinates(points).toArray))
   }
 
   implicit def jtsToLine(jtsGeom: jts.LineString): Line = {
