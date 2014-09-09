@@ -40,6 +40,10 @@ case class Line(jtsGeometry: jts.LineString) extends Geometry {
     jtsGeometry.isClosed
   }
 
+  def isRing: Boolean = {
+    jtsGeometry.isRing
+  }
+
   def reverse: Line = {
     Line(jtsGeometry.reverse.asInstanceOf[LineString])
   }
