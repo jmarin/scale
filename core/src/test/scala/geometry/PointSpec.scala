@@ -5,6 +5,10 @@ import org.specs2.mutable.Specification
 class PointSpec extends Specification {
 
   "A Point" should {
+    "be valid" in {
+      val p = Point(-77, 39)
+      p.isValid must beTrue
+    }
     "always have coordinates" in {
       val p = Point(-77, 39)
       p.x must be equalTo (-77.0)
