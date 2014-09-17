@@ -63,4 +63,10 @@ case class Line(jtsGeometry: jts.LineString) extends Geometry {
     jtsGeometry.isCoordinate(point.jtsGeometry.getCoordinate)
   }
 
+  def points: Array[Point] = {
+    jtsGeometry.getCoordinates.map { c =>
+      Point(c.x, c.y, c.z)
+    }
+  }
+
 }

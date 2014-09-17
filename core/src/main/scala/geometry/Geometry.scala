@@ -12,6 +12,8 @@ trait Geometry {
 
   def isEmpty: Boolean = jtsGeometry.isEmpty
 
+  def envelope: Envelope = Envelope(jtsGeometry.getEnvelopeInternal)
+
   def contains(that: Geometry): Boolean = {
     jtsGeometry.contains(that.jtsGeometry)
   }
@@ -50,13 +52,14 @@ trait Geometry {
 
   def centroid: Point = Point(jtsGeometry.getCentroid)
 
-  def vertices: Array[jts.Coordinate] = jtsGeometry.getCoordinates
+  def coordinates: Array[jts.Coordinate] = jtsGeometry.getCoordinates
 
   def intersection(that: Geometry): Geometry = {
     val result = jtsGeometry.intersection(that.jtsGeometry)
     result.getGeometryType match {
       case "Point" => Point(result.asInstanceOf[jts.Point])
       case "Line" => Line(result.asInstanceOf[jts.LineString])
+      case "Polygon" => Polygon(result.asInstanceOf[jts.Polygon])
     }
   }
 
