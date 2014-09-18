@@ -6,13 +6,15 @@ trait Geometry {
 
   val jtsGeometry: jts.Geometry
 
+  def geometryType = jtsGeometry.getGeometryType
+
+  def envelope: Envelope = Envelope(jtsGeometry.getEnvelopeInternal)
+
   def isValid: Boolean = jtsGeometry.isValid
 
   def isSimple: Boolean = jtsGeometry.isSimple
 
   def isEmpty: Boolean = jtsGeometry.isEmpty
-
-  def envelope: Envelope = Envelope(jtsGeometry.getEnvelopeInternal)
 
   def contains(that: Geometry): Boolean = {
     jtsGeometry.contains(that.jtsGeometry)

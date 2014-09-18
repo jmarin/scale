@@ -25,10 +25,13 @@ class PointSpec extends Specification {
       val p2 = Point(-76, 39)
       p1 intersects p2 must beFalse
     }
+    //   "store projection" in {
+    //     val p = Point(-77, 39, 0, 4326)
+    //     p.srid must be equalTo (4326)
+    //   }
     "serialize to WKT" in {
       val p = Point(-77, 39)
       p.toWKT must be equalTo ("POINT (-77 39)")
-
     }
   }
 

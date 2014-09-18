@@ -5,6 +5,7 @@ import com.vividsolutions.jts.{ geom => jts }
 import jts.GeometryFactory
 import jts.LineString
 import jts.impl.CoordinateArraySequence
+import jts.PrecisionModel
 
 object Line {
 
@@ -16,6 +17,12 @@ object Line {
 
   def apply(points: Traversable[Point]): Line = {
     Line(geomFactory.
+      createLineString(Util.points2JTSCoordinates(points).toArray))
+  }
+
+  def apply(points: Traversable[Point], srid: Int): Line = {
+    val gf = new jts.GeometryFactory(new PrecisionModel, srid)
+    Line(gf.
       createLineString(Util.points2JTSCoordinates(points).toArray))
   }
 
