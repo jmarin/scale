@@ -36,10 +36,10 @@ object Point {
 
 case class Point(jtsGeometry: jts.Point) extends Geometry {
 
-  val x: Double = jtsGeometry.getX
+  def x: Double = jtsGeometry.getX
 
-  val y: Double = jtsGeometry.getY
+  def y: Double = jtsGeometry.getY
 
-  val z: Double = jtsGeometry.getCoordinate.z
+  def z: Double = jtsGeometry.getCoordinate.z
 
 }
