@@ -16,6 +16,7 @@ object Util {
       case "Point" => Point(geom.asInstanceOf[jts.Point])
       case "Line" => Line(geom.asInstanceOf[jts.LineString])
       case "Polygon" => Polygon(geom.asInstanceOf[jts.Polygon])
+      case "GeometryCollection" => GeometryCollection(geom.asInstanceOf[jts.GeometryCollection])
     }
   }
 
