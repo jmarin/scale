@@ -11,4 +11,12 @@ object Util {
     }
   }
 
+  def geometryType(geom: jts.Geometry): Geometry = {
+    geom.getGeometryType match {
+      case "Point" => Point(geom.asInstanceOf[jts.Point])
+      case "Line" => Line(geom.asInstanceOf[jts.LineString])
+      case "Polygon" => Polygon(geom.asInstanceOf[jts.Polygon])
+    }
+  }
+
 }

@@ -13,6 +13,10 @@ class MultiPointSpec extends Specification {
     "be valid" in {
       mp.isValid must beTrue
     }
+    "have a boundary" in {
+      println(mp.boundary)
+      mp.boundary must be equalTo (mp)
+    }
   }
 
 }

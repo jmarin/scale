@@ -18,5 +18,11 @@ object MultiPoint {
 
 }
 
-case class MultiPoint(jtsGeometry: jts.MultiPoint) extends Geometry
+case class MultiPoint(jtsGeometry: jts.MultiPoint) extends Geometry {
+
+  def boundary: Geometry = {
+    val result = jtsGeometry.getBoundary
+    Util.geometryType(result)
+  }
+}
 

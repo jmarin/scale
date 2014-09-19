@@ -58,11 +58,7 @@ trait Geometry {
 
   def intersection(that: Geometry): Geometry = {
     val result = jtsGeometry.intersection(that.jtsGeometry)
-    result.getGeometryType match {
-      case "Point" => Point(result.asInstanceOf[jts.Point])
-      case "Line" => Line(result.asInstanceOf[jts.LineString])
-      case "Polygon" => Polygon(result.asInstanceOf[jts.Polygon])
-    }
+    Util.geometryType(result)
   }
 
   def toWKT: String = jtsGeometry.toText
