@@ -37,8 +37,8 @@ class PolygonSpec extends Specification {
       poly.isValid must beTrue
     }
     "serialize to WKT" in {
-      polygon.toWKT must be equalTo ("POLYGON ((-77 39, -76 40, -75 38, -77 39))")
-      polygonFromLine.toWKT must be equalTo ("POLYGON ((-77 39, -76 40, -75 38, -77 39))")
+      polygon.wkt must be equalTo ("POLYGON ((-77 39, -76 40, -75 38, -77 39))")
+      polygonFromLine.wkt must be equalTo ("POLYGON ((-77 39, -76 40, -75 38, -77 39))")
     }
   }
 

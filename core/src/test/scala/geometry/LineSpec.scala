@@ -52,7 +52,7 @@ class LineSpec extends Specification {
       line.isCoordinate(p5) must beFalse
     }
     "Serialize to WKT" in {
-      line.toWKT must be equalTo ("LINESTRING (-77 39, -76 40, -75 38)")
+      line.wkt must be equalTo ("LINESTRING (-77 39, -76 40, -75 38)")
     }
   }
 

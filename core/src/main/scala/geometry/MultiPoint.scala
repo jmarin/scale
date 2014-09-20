@@ -16,6 +16,12 @@ object MultiPoint {
     MultiPoint(new jts.MultiPoint(jtsPoints, geomFactory))
   }
 
+  def apply(points: Array[Point], srid: Int): MultiPoint = {
+    val jtsPoints = points.map(p => p.jtsGeometry)
+    val gf = new jts.GeometryFactory(null, srid)
+    MultiPoint(new jts.MultiPoint(jtsPoints, gf))
+  }
+
 }
 
 case class MultiPoint(jtsGeometry: jts.MultiPoint) extends Geometry

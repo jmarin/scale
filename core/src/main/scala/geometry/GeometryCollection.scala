@@ -1,6 +1,5 @@
 package geometry
 
-import scala.language.implicitConversions
 import com.vividsolutions.jts.{ geom => jts }
 
 object GeometryCollection {

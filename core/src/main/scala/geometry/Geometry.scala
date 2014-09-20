@@ -61,6 +61,6 @@ trait Geometry {
     Util.geometryType(result)
   }
 
-  def toWKT: String = jtsGeometry.toText
+  def wkt: String = jtsGeometry.toText
 
 }
