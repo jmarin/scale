@@ -1,4 +1,4 @@
 scale
 =====
 
-A geospatial library written in Scala
+A modern geospatial stack for the JVM
