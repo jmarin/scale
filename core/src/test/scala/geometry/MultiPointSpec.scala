@@ -14,6 +14,9 @@ class MultiPointSpec extends Specification {
     "be valid" in {
       mp.isValid must beTrue
     }
+    "have a number of Points" in {
+      mp.numGeometries must be equalTo (5)
+    }
     "serialize to WKT" in {
       mp.wkt must be equalTo ("MULTIPOINT ((-77 39), (-77 40), (-76 40), (-76 39), (-77 39))")
     }

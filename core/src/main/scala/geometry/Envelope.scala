@@ -39,4 +39,12 @@ case class Envelope(jtsEnvelope: jts.Envelope) {
     Envelope(jtsEnvelope.intersection(env.jtsEnvelope))
   }
 
+  def toPolygon: Polygon = {
+    val p1 = Point(this.xmin, this.ymin)
+    val p2 = Point(this.xmin, this.ymax)
+    val p3 = Point(this.xmax, this.ymax)
+    val p4 = Point(this.xmax, this.ymin)
+    Polygon(p1, p2, p3, p4, p1)
+  }
+
 }

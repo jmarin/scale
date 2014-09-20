@@ -6,7 +6,7 @@ trait Geometry {
 
   val jtsGeometry: jts.Geometry
 
-  def geometryType = jtsGeometry.getGeometryType
+  def geometryType: String = jtsGeometry.getGeometryType
 
   def envelope: Envelope = Envelope(jtsGeometry.getEnvelopeInternal)
 
@@ -56,11 +56,24 @@ trait Geometry {
 
   def coordinates: Array[jts.Coordinate] = jtsGeometry.getCoordinates
 
+  def points: Array[Point] = coordinates.map(c => Point(c.x, c.y, c.z))
+
   def intersection(that: Geometry): Geometry = {
     val result = jtsGeometry.intersection(that.jtsGeometry)
-    Util.geometryType(result)
+    convertType(result)
   }
 
   def wkt: String = jtsGeometry.toText
+
+  def convertType(geom: jts.Geometry): Geometry = {
+    geom.getGeometryType match {
+      case "Point" => Point(geom.asInstanceOf[jts.Point])
+      case "Line" => Line(geom.asInstanceOf[jts.LineString])
+      case "Polygon" => Polygon(geom.asInstanceOf[jts.Polygon])
+      case "MultiPoint" => MultiPoint(geom.asInstanceOf[jts.MultiPoint])
+      case "MultiLineString" => MultiLine(geom.asInstanceOf[jts.MultiLineString])
+      case "MultiPolygon" => MultiPolygon(geom.asInstanceOf[jts.MultiPolygon])
+    }
+  }
 
 }

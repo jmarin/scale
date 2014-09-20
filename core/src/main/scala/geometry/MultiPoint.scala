@@ -24,5 +24,5 @@ object MultiPoint {
 
 }
 
-case class MultiPoint(jtsGeometry: jts.MultiPoint) extends Geometry
+case class MultiPoint(jtsGeometry: jts.MultiPoint) extends GeometryCollection
 

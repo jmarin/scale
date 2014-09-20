@@ -28,7 +28,7 @@ object MultiLine {
 
 }
 
-case class MultiLine(jtsGeometry: jts.MultiLineString) extends Geometry {
+case class MultiLine(jtsGeometry: jts.MultiLineString) extends GeometryCollection {
 
   def reverse: MultiLine = {
     MultiLine(jtsGeometry.reverse.asInstanceOf[jts.MultiLineString])
