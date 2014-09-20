@@ -33,6 +33,16 @@ object Polygon {
     Polygon(new jts.Polygon(exteriorRing, holes, geomFactory))
   }
 
+  def apply(exterior: Line, interior: Array[Line], srid: Int): Polygon = {
+    val gf = new jts.GeometryFactory(null, srid)
+    val exteriorRing = gf.createLinearRing(
+      Util.points2JTSCoordinates(exterior.points).toArray)
+    val holes = interior.map(i => gf.createLinearRing(
+      Util.points2JTSCoordinates(i.points).toArray))
+    Polygon(new jts.Polygon(exteriorRing, holes, gf))
+
+  }
+
   implicit def jtsToPolygon(jtsGeom: jts.Polygon): Polygon = {
     apply(jtsGeom)
   }
