@@ -40,6 +40,8 @@ case class Feature[K, V](id: String, crs: CoordinateReferenceSystem, geometry: G
 
   def addOrUpdate(k: K, v: V): Feature[K, V] = Feature(id, crs, geometry, values.updated(k, v))
 
+  def updateGeometry(geom: Geometry) = Feature(id, crs, geom, values)
+
   def get(k: K): Option[V] = values.get(k)
 
 }

@@ -26,12 +26,17 @@ class FeatureSpec extends Specification {
       val updatedValue = uf.get("DESCRIPTION").getOrElse("")
       updatedValue must be equalTo ("Updated Value")
     }
-    "Have fields with different value types" in {
+    "have fields with different value types" in {
       val values1 = Map("DESCRIPTION" -> "First Point", "ID" -> 1)
       val f1 = Feature(id, p1, values1)
       f1.countFields must be equalTo (2)
       f1.id must be equalTo ("1")
       f1.get("ID").getOrElse("") must be equalTo (1)
+    }
+    "update its geometry" in {
+      val p2 = Point(-105, 37)
+      val fn = f.updateGeometry(p2)
+      fn.geometry must be equalTo (p2)
     }
 
   }
