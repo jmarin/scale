@@ -59,10 +59,16 @@ case class Feature[K, V](id: String, crs: CoordinateReferenceSystem, geometry: G
     val projGeom = geometry.geometryType match {
       case "Point" =>
         projectPoint(transform, geometry.asInstanceOf[Point])
+      case "MultiPoint" =>
+        projectMultiPoint(transform, geometry.asInstanceOf[MultiPoint])
       case "LineString" =>
         projectLine(transform, geometry.asInstanceOf[Line])
+      case "MultiLineString" =>
+        projectMultiLine(transform, geometry.asInstanceOf[MultiLine])
       case "Polygon" =>
         projectPolygon(transform, geometry.asInstanceOf[Polygon])
+      case "MultiPolygon" =>
+        projectMultiPolygon(transform, geometry.asInstanceOf[MultiPolygon])
 
     }
     Feature(id, outCRS, projGeom, values)
@@ -89,9 +95,21 @@ case class Feature[K, V](id: String, crs: CoordinateReferenceSystem, geometry: G
     points.map(p => projectPoint(transform, p))
   }
 
+  def projectMultiPoint(transform: CoordinateTransform, multiPoint: MultiPoint): MultiPoint = {
+    val pts = multiPoint.geometries.map(p => p.asInstanceOf[jts.Point])
+    val points = pts.map(p => projectPoint(transform, p)).toArray
+    MultiPoint(points)
+  }
+
   private def projectLine(transform: CoordinateTransform, line: Line): Line = {
     val points = projectPoints(transform, line.points)
     Line(points, srid(transform.getTargetCRS))
+  }
+
+  private def projectMultiLine(transform: CoordinateTransform, multiLine: MultiLine): MultiLine = {
+    val lns = multiLine.geometries.map(l => l.asInstanceOf[jts.LineString])
+    val lines = lns.map(l => projectLine(transform, Line(l))).toArray
+    MultiLine(lines)
   }
 
   private def projectPolygon(transform: CoordinateTransform, polygon: Polygon): Polygon = {
@@ -100,18 +118,24 @@ case class Feature[K, V](id: String, crs: CoordinateReferenceSystem, geometry: G
       projectCoordinates(transform, polygon.jtsGeometry.getExteriorRing.getCoordinates))
     val numHoles = polygon.jtsGeometry.getNumInteriorRing
 
-    def acc(list: List[jts.LineString], n: Int): List[jts.LineString] = n match {
+    def loop(list: List[jts.LineString], n: Int): List[jts.LineString] = n match {
       case 0 => list
       case _ =>
         val hole = polygon.jtsGeometry.getInteriorRingN(n - 1)
-        acc(hole :: list, n - 1)
+        loop(hole :: list, n - 1)
     }
 
-    val rings = acc(Nil, numHoles)
+    val rings = loop(Nil, numHoles)
     val holes = rings.map { h =>
       gf.createLinearRing(projectCoordinates(transform, h.getCoordinates))
     }.toArray
     Polygon(gf.createPolygon(exterior, holes))
+  }
+
+  def projectMultiPolygon(transform: CoordinateTransform, multiPolygon: MultiPolygon): MultiPolygon = {
+    val pls = multiPolygon.geometries.map(p => p.asInstanceOf[jts.Polygon])
+    val polys = pls.map(p => projectPolygon(transform, Polygon(p))).toArray
+    MultiPolygon(polys)
   }
 
   private def srid(crs: CoordinateReferenceSystem): Int = {

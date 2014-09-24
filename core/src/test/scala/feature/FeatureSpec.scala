@@ -12,17 +12,23 @@ class FeatureSpec extends Specification {
   val p6 = Point(-75.7, 39.2)
   val p7 = Point(-76.5, 39)
   val p8 = Point(-76, 38.5)
+  val multipoint = MultiPoint(p1, p2, p3, p4)
   val line = Line(p1, p2)
   val polygon = Polygon(p1, p2, p3, p4)
   val boundary = Line(p1, p2, p3, p4)
   val ring = Line(p6, p7, p8, p6)
   val polyWithHoles = Polygon(boundary, ring)
+  val multiline = MultiLine(line, ring)
+  val multipolygon = MultiPolygon(polygon, Polygon(ring))
   val id = "1"
   val values = Map("DESCRIPTION" -> "First Point")
   val f = Feature(id, p1, values)
   val fl = Feature(id, line, values)
   val fp = Feature(id, polygon, values)
   val fph = Feature(id, polyWithHoles, values)
+  val fmp = Feature(id, multipoint, values)
+  val fml = Feature(id, multiline, values)
+  val fmpoly = Feature(id, multipolygon, values)
 
   "A Feature" should {
     "have some values" in {
@@ -57,10 +63,19 @@ class FeatureSpec extends Specification {
       p.crs.getName must be equalTo ("EPSG:3857")
       p.geometry.wkt must be equalTo ("POINT (-8571600.791082066 4721671.572580107)")
     }
+    "project a MultiPoint to another CRS" in {
+      val mp = fmp.project(3857)
+      mp.crs.getName must be equalTo ("EPSG:3857")
+      mp.geometry.wkt must be equalTo ("MULTIPOINT ((-8571600.791082066 4721671.572580107), (-8460281.300288793 4865942.279503176), (-8348961.809495518 4579425.812870097), (-8571600.791082066 4721671.572580107))")
+    }
     "project a Line to another CRS" in {
       val p = fl.project(3857)
       p.crs.getName must be equalTo ("EPSG:3857")
       p.geometry.wkt must be equalTo ("LINESTRING (-8571600.791082066 4721671.572580107, -8460281.300288793 4865942.279503176)")
+    }
+    "project a MultiLine to another CRS" in {
+      val l = fml.project(3857)
+      l.crs.getName must be equalTo ("EPSG:3857")
     }
     "project a Polygon to another CRS" in {
       val p = fp.project(3857)
@@ -71,6 +86,11 @@ class FeatureSpec extends Specification {
       val p = fph.project(3857)
       p.crs.getName must be equalTo ("EPSG:3857")
       p.geometry.wkt must be equalTo ("POLYGON ((-8571600.791082066 4721671.572580107, -8460281.300288793 4865942.279503176, -8348961.809495518 4579425.812870097, -8571600.791082066 4721671.572580107), (-8426885.453050809 4750360.4811166, -8515941.045685427 4721671.572580107, -8460281.300288793 4650301.836738959, -8426885.453050809 4750360.4811166))")
+    }
+    "project a MultiPolygon to another CRS" in {
+      val p = fmpoly.project(3857)
+      p.crs.getName must be equalTo ("EPSG:3857")
+      p.geometry.wkt must be equalTo ("MULTIPOLYGON (((-8571600.791082066 4721671.572580107, -8460281.300288793 4865942.279503176, -8348961.809495518 4579425.812870097, -8571600.791082066 4721671.572580107)), ((-8426885.453050809 4750360.4811166, -8515941.045685427 4721671.572580107, -8460281.300288793 4650301.836738959, -8426885.453050809 4750360.4811166)))")
     }
   }
 
