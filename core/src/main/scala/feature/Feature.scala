@@ -53,8 +53,8 @@ case class Feature[K, V](id: String, crs: CoordinateReferenceSystem, geometry: G
 
   def get(k: K): Option[V] = values.get(k)
 
-  def project(epsg: Int): Feature[K, V] = {
-    val outCRS = crsFactory.createFromName(s"EPSG:$epsg")
+  def project(srid: Int): Feature[K, V] = {
+    val outCRS = crsFactory.createFromName(s"EPSG:$srid")
     val transform = ctf.createTransform(crs, outCRS)
     val projGeom = geometry.geometryType match {
       case "Point" =>
