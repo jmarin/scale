@@ -31,6 +31,10 @@ class FeatureTraversableSpec extends Specification {
       val seq = FeatureSeq(fp, fph)
       ft.toSeq must be equalTo (seq)
     }
+    "project to different crs" in {
+      val proj = ft.map(f => f.project(3857))
+      proj.head.crs.getName must be equalTo ("EPSG:3857")
+    }
   }
 
 }
