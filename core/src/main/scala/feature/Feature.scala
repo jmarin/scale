@@ -53,6 +53,8 @@ case class Feature[K, V](id: String, crs: CoordinateReferenceSystem, geometry: G
 
   def get(k: K): Option[V] = values.get(k)
 
+  def envelope: Envelope = geometry.envelope
+
   def project(srid: Int): Feature[K, V] = {
     val outCRS = crsFactory.createFromName(s"EPSG:$srid")
     val transform = ctf.createTransform(crs, outCRS)

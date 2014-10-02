@@ -35,8 +35,16 @@ case class Envelope(jtsEnvelope: jts.Envelope) {
     jtsEnvelope.intersects(point.jtsGeometry.getCoordinate)
   }
 
-  def intersection(env: Envelope): Envelope = {
-    Envelope(jtsEnvelope.intersection(env.jtsEnvelope))
+  def intersection(that: Envelope): Envelope = {
+    Envelope(jtsEnvelope.intersection(that.jtsEnvelope))
+  }
+
+  def union(that: Envelope): Envelope = {
+    val x1 = if (xmin < that.xmin) xmin else that.xmin
+    val y1 = if (ymin < that.ymin) ymin else that.ymin
+    val x2 = if (xmax > that.xmax) xmax else that.xmax
+    val y2 = if (ymax > that.ymax) ymax else that.ymax
+    Envelope(x1, y1, x2, y2)
   }
 
   def toPolygon: Polygon = {

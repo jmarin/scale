@@ -11,6 +11,7 @@ class EnvelopeSpec extends Specification {
   val env1 = Envelope(p1, p2)
   val env2 = Envelope(p3, p4)
   val intEnv = Envelope(p3, p2)
+  val uniEnv = Envelope(p1, p4)
 
   "An Envelope" should {
     "have dimensions" in {
@@ -38,6 +39,9 @@ class EnvelopeSpec extends Specification {
     }
     "intersect with other envelope" in {
       env1 intersection env2 must be equalTo (intEnv)
+    }
+    "union two envelopes to form a larger one" in {
+      env1 union env2 must be equalTo (uniEnv)
     }
     "convert to Polygon" in {
       env1.toPolygon.wkt must be equalTo ("POLYGON ((-77 39, -77 40, -76 40, -76 39, -77 39))")

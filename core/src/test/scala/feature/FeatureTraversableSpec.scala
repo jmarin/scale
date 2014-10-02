@@ -35,6 +35,11 @@ class FeatureTraversableSpec extends Specification {
       val proj = ft.map(f => f.project(3857))
       proj.head.crs.getName must be equalTo ("EPSG:3857")
     }
+    "have an envelope" in {
+      val envs = ft.features.map(f => f.geometry.envelope)
+      val env = ft.envelope(envs.toArray)
+      env must be equalTo (polygon.envelope)
+    }
   }
 
 }
