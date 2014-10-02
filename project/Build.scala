@@ -26,10 +26,12 @@ object Dependencies {
   val specs2Version = "2.4.2"
   val jtsVersion    = "1.13"
   val proj4jVersion = "0.1.0"
+  val sprayJsonVersion = "1.3.0"
 
-  val specs2 = "org.specs2"         %% "specs2" % specs2Version % "test" 
-  val jts    = "com.vividsolutions" %  "jts"    % jtsVersion
-  val proj4j = "org.osgeo"          %  "proj4j" % proj4jVersion
+  val specs2 = "org.specs2" %% "specs2" % specs2Version % "test" 
+  val jts    = "com.vividsolutions" %  "jts" % jtsVersion
+  val proj4j = "org.osgeo" % "proj4j" % proj4jVersion
+  val sprayJson = "io.spray" %% "spray-json" % sprayJsonVersion
 }
 
 object ScaleBuild extends Build {
@@ -41,11 +43,13 @@ object ScaleBuild extends Build {
 
   val coreDeps = commonDeps ++ Seq(jts,proj4j)
 
+  val serializeDeps = coreDeps ++ Seq(sprayJson)
+
   lazy val scale = Project(
     "scale",
     file("."),
     settings = buildSettings
-  ).aggregate(core)
+  ).aggregate(core, serialization)
 
   lazy val core = Project(
     "core",
@@ -53,5 +57,12 @@ object ScaleBuild extends Build {
     settings = buildSettings ++ Seq(resolvers := opengeoResolver,
                                     libraryDependencies ++= coreDeps) 
   )
+
+  lazy val serialization = Project(
+    "serialization",
+    file("serialization"),
+    settings = buildSettings ++ Seq(resolvers := opengeoResolver,
+                                    libraryDependencies ++= serializeDeps)
+  ).dependsOn(core)
 
 }
