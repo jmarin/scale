@@ -1,0 +1,3 @@
+package layer
+
+trait Layer {}

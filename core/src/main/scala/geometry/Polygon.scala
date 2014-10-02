@@ -14,7 +14,15 @@ object Polygon {
 
   def apply(points: Traversable[Point]): Polygon = {
     val ring = geomFactory.createLinearRing(Util.points2JTSCoordinates(points).toArray)
+    require(ring.isValid)
     Polygon(new jts.Polygon(ring, null, geomFactory))
+  }
+
+  def apply(points: Traversable[Point], srid: Int): Polygon = {
+    val gf = new jts.GeometryFactory(null, srid)
+    val ring = geomFactory.createLinearRing(Util.points2JTSCoordinates(points).toArray)
+    require(ring.isValid)
+    Polygon(new jts.Polygon(ring, null, gf))
   }
 
   def apply(line: Line): Polygon = {
@@ -28,8 +36,10 @@ object Polygon {
   def apply(exterior: Line, interior: Array[Line]): Polygon = {
     val exteriorRing = geomFactory.createLinearRing(
       Util.points2JTSCoordinates(exterior.points).toArray)
+    require(exteriorRing.isValid)
     val holes = interior.map(i => geomFactory.createLinearRing(
       Util.points2JTSCoordinates(i.points).toArray))
+    holes.foreach(h => require(h.isValid))
     Polygon(new jts.Polygon(exteriorRing, holes, geomFactory))
   }
 
@@ -37,10 +47,11 @@ object Polygon {
     val gf = new jts.GeometryFactory(null, srid)
     val exteriorRing = gf.createLinearRing(
       Util.points2JTSCoordinates(exterior.points).toArray)
+    require(exteriorRing.isValid)
     val holes = interior.map(i => gf.createLinearRing(
       Util.points2JTSCoordinates(i.points).toArray))
+    holes.foreach(h => require(h.isValid))
     Polygon(new jts.Polygon(exteriorRing, holes, gf))
-
   }
 
   implicit def jtsToPolygon(jtsGeom: jts.Polygon): Polygon = {
