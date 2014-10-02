@@ -2,14 +2,21 @@ package feature
 
 import com.vividsolutions.jts.{ geom => jts }
 import geometry._
+import feature._
 
-trait FeatureCollection[Feature] {
+object FeatureCollection {
 
-  def features: Iterable[Feature]
+  def apply[K, V](features: Feature[K, V]*): FeatureCollection[K, V] = {
+    FeatureCollection(features.toIterable)
+  }
+}
 
-  def count: Int
+case class FeatureCollection[K, V](features: Traversable[Feature[K, V]]) {
 
-  def envelope(envs: Array[Envelope]): Envelope = {
+  def count: Int = features.size
+
+  def envelope: Envelope = {
+    val envs = features.map(f => f.geometry.envelope)
     envs.reduceLeft[Envelope] { (l, r) =>
       l union r
     }

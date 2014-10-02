@@ -3,7 +3,7 @@ package feature
 import org.specs2.mutable.Specification
 import geometry._
 
-class FeatureTraversableSpec extends Specification {
+class FeatureCollectionSpec extends Specification {
 
   val p1 = Point(-77, 39)
   val p2 = Point(-76, 40)
@@ -20,26 +20,22 @@ class FeatureTraversableSpec extends Specification {
   val values = Map("DESCRIPTION" -> "First Point")
   val fp = Feature(id, polygon, values)
   val fph = Feature(id, polyWithHoles, values)
-  val ft = FeatureTraversable(fp, fph)
+  val fc = FeatureCollection(fp, fph)
 
-  "A FeatureTraversable" should {
+  "A FeatureCollection" should {
     "get a list of features" in {
-      val list = ft.toList
+      val list = fc.features.toList
       list must be equalTo (List(fp, fph))
     }
-    "produce a sequence" in {
-      val seq = FeatureSeq(fp, fph)
-      ft.toSeq must be equalTo (seq)
-    }
     "project to different crs" in {
-      val proj = ft.map(f => f.project(3857))
+      val proj = fc.features.map(f => f.project(3857))
       proj.head.crs.getName must be equalTo ("EPSG:3857")
     }
     "have an envelope" in {
-      val envs = ft.features.map(f => f.geometry.envelope)
-      val env = ft.envelope(envs.toArray)
+      val env = fc.envelope
       env must be equalTo (polygon.envelope)
     }
   }
 
 }
+
