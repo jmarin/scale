@@ -36,16 +36,20 @@ object GeoJsonProtocol extends DefaultJsonProtocol with NullOptions {
     def read(json: JsValue): Line = {
       json.asJsObject.getFields("type", "coordinates") match {
         case Seq(JsString(t), JsArray(p)) =>
-          val points = p.map { x =>
-            val point = JsObject(
-              "type" -> JsString("Point"),
-              "coordinates" -> x
-            )
-            point.convertTo[Point]
-          }
+          val points = toPoints(p)
           Line(points)
         case _ => throw new DeserializationException("LineString GeoJSON expected")
       }
+    }
+  }
+
+  def toPoints(coords: Vector[JsValue]): Vector[Point] = {
+    coords.map { x =>
+      val point = JsObject(
+        "type" -> JsString("Point"),
+        "coordinates" -> x
+      )
+      point.convertTo[Point]
     }
   }
 
