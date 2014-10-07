@@ -15,6 +15,9 @@ class PolygonSpec extends Specification {
   val polygon = Polygon(p1, p2, p3, p4)
   val polygonFromLine = Polygon(Line(Array(p1, p2, p3, p4)))
   val hole = Polygon(p6, p7, p8, p6)
+  val boundary = Line(p1, p2, p3, p4)
+  val ring = Line(p6, p7, p8, p6)
+  val polyWithHole = Polygon(boundary, ring)
 
   "A Polygon" should {
     "be valid" in {
@@ -31,14 +34,17 @@ class PolygonSpec extends Specification {
       polygonFromLine.area must be greaterThan (0)
     }
     "be able to contain holes" in {
-      val boundary = Line(p1, p2, p3, p4)
-      val ring = Line(p6, p7, p8, p6)
-      val poly = Polygon(boundary, ring)
-      poly.isValid must beTrue
+      polyWithHole.isValid must beTrue
     }
     "serialize to WKT" in {
       polygon.wkt must be equalTo ("POLYGON ((-77 39, -76 40, -75 38, -77 39))")
       polygonFromLine.wkt must be equalTo ("POLYGON ((-77 39, -76 40, -75 38, -77 39))")
+    }
+    "get external boundary as line" in {
+      polygon.boundary must be equalTo (Line(p1, p2, p3, p1))
+    }
+    "get interior rings as list of lines" in {
+      polyWithHole.holes.size must be equalTo (1)
     }
   }
 

@@ -118,19 +118,9 @@ case class Feature[K, V](id: String, crs: CoordinateReferenceSystem, geometry: G
     val gf = polygon.jtsGeometry.getFactory
     val exterior = gf.createLinearRing(
       projectCoordinates(transform, polygon.jtsGeometry.getExteriorRing.getCoordinates))
-    val numHoles = polygon.jtsGeometry.getNumInteriorRing
-
-    def loop(list: List[jts.LineString], n: Int): List[jts.LineString] = n match {
-      case 0 => list
-      case _ =>
-        val hole = polygon.jtsGeometry.getInteriorRingN(n - 1)
-        loop(hole :: list, n - 1)
+    val holes = polygon.holes.map { h =>
+      h.jtsGeometry.asInstanceOf[jts.LinearRing]
     }
-
-    val rings = loop(Nil, numHoles)
-    val holes = rings.map { h =>
-      gf.createLinearRing(projectCoordinates(transform, h.getCoordinates))
-    }.toArray
     Polygon(gf.createPolygon(exterior, holes))
   }
 

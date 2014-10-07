@@ -74,4 +74,22 @@ case class Polygon(jtsGeometry: jts.Polygon) extends Geometry {
     jtsGeometry.isRectangle
   }
 
+  def boundary: Line = Line(jtsGeometry.getExteriorRing)
+
+  def holes: Array[Line] = {
+    val gf = jtsGeometry.getFactory
+    val numHoles = jtsGeometry.getNumInteriorRing
+
+    def loop(list: List[jts.LineString], n: Int): List[jts.LineString] = n match {
+      case 0 => list
+      case _ =>
+        val hole = jtsGeometry.getInteriorRingN(n - 1)
+        loop(hole :: list, n - 1)
+    }
+
+    val rings = loop(Nil, numHoles)
+    rings.map { h =>
+      Line(gf.createLinearRing(h.getCoordinates).asInstanceOf[jts.LineString])
+    }.toArray
+  }
 }
