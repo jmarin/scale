@@ -27,7 +27,7 @@ class GeoJsonProtocolSpec extends Specification {
   val ph3 = Point(101, 1)
   val ph4 = Point(100, 1)
   val h1 = Point(100.2, 0.2)
-  val h2 = Point(100.8, 0, 2)
+  val h2 = Point(100.8, 0.2)
   val h3 = Point(100.8, 0.8)
   val exterior = Line(ph1, ph2, ph3, ph4, ph1)
   val hole = Line(h1, h2, h3, h1)
@@ -35,7 +35,7 @@ class GeoJsonProtocolSpec extends Specification {
   val pointJson = """{"type":"Point","coordinates":[-77.1,38.5,0.0]}"""
   val lineJson = """{"type":"LineString","coordinates":[[-77.1,38.5,0.0],[-102.2,45.8,0.0]]}"""
   val polyJson = """{"type":"Polygon","coordinates":[[[-77.1,38.5,0.0],[-102.2,45.8,0.0],[-85.1,39.1,0.0],[-77.1,38.5,0.0]]]}"""
-  val polyWithHoleJson = """{"type":"Polygon","coordinates":[[[100.0,0.0,0.0],[101.0,0.0,0.0],[101.0,1.0,0.0],[100.0,1.0,0.0],[100.0,0.0,0.0]],[[100.2,0.2,0.0],[100.8,0.2,0.0],[100.8,0.8,0.0],[100.2,0.8,0.0],[100.2,0.2,0.0]]]}"""
+  val polyWithHoleJson = """{"type":"Polygon","coordinates":[[[100.0,0.0,0.0],[101.0,0.0,0.0],[101.0,1.0,0.0],[100.0,1.0,0.0],[100.0,0.0,0.0]],[[100.2,0.2,0.0],[100.8,0.2,0.0],[100.8,0.8,0.0],[100.2,0.2,0.0]]]}"""
   val mpJson = """{"type":"MultiPoint","coordinates":[[-77.1,38.5,0.0],[-102.2,45.8,0.0]]}"""
   val mlJson = """{"type":"MultiLineString","coordinates":[[[-77.1,38.5,0.0],[-102.2,45.8,0.0]],[[-102.2,45.8,0.0],[-85.1,39.1,0.0]]]}"""
   val mpolyJson = """{"type":"MultiPolygon","coordinates":}"""

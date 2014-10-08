@@ -1,5 +1,6 @@
 package geojson
 
+import com.vividsolutions.jts.{ geom => jts }
 import spray.json._
 import geometry._
 import feature._
@@ -50,7 +51,11 @@ object GeoJsonProtocol extends DefaultJsonProtocol with NullOptions {
             "type" -> JsString("Polygon"),
             "coordinates" -> JsArray(JsArray(ptsExt.toVector))
           )
-        case _ => JsObject()
+        case _ =>
+          val boundary = p.boundary.jtsGeometry
+          val holes = p.holes.map(h => h.jtsGeometry).toList
+          val geometries = boundary :: holes
+          toCoords(geometries, "Polygon")
       }
 
     }
@@ -81,18 +86,7 @@ object GeoJsonProtocol extends DefaultJsonProtocol with NullOptions {
   implicit object MultiLineFormat extends JsonFormat[MultiLine] {
     def write(ml: MultiLine): JsValue = {
       val lines = ml.geometries
-      JsObject(
-        "type" -> JsString("MultiLineString"),
-        "coordinates" -> JsArray(
-          lines.map { l =>
-            JsArray(
-              l.getCoordinates.map { c =>
-                JsArray(JsNumber(c.x), JsNumber(c.y), JsNumber(c.z))
-              }.toVector
-            )
-          }.toVector
-        )
-      )
+      toCoords(lines, "MultiLineString")
     }
     def read(json: JsValue): MultiLine = {
       json.asJsObject.getFields("type", "coordinates") match {
@@ -136,6 +130,21 @@ object GeoJsonProtocol extends DefaultJsonProtocol with NullOptions {
     JsObject(
       "type" -> JsString(`type`),
       "coordinates" -> JsArray(coords)
+    )
+  }
+
+  private def toCoords(geometries: List[jts.Geometry], `type`: String): JsValue = {
+    JsObject(
+      "type" -> JsString(`type`),
+      "coordinates" -> JsArray(
+        geometries.map { g =>
+          JsArray(
+            g.getCoordinates.map { c =>
+              JsArray(JsNumber(c.x), JsNumber(c.y), JsNumber(c.z))
+            }.toVector
+          )
+        }.toVector
+      )
     )
   }
 
