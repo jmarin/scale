@@ -24,11 +24,13 @@ object Resolvers {
 
 object Dependencies {
   val specs2Version = "2.4.2"
+  val scalacheckVersion = "1.11.6"
   val jtsVersion    = "1.13"
   val proj4jVersion = "0.1.0"
   val sprayJsonVersion = "1.3.0"
 
   val specs2 = "org.specs2" %% "specs2" % specs2Version % "test" 
+  val scalacheck = "org.scalacheck" %% "scalacheck" % scalacheckVersion % "test"
   val jts    = "com.vividsolutions" %  "jts" % jtsVersion
   val proj4j = "org.osgeo" % "proj4j" % proj4jVersion
   val sprayJson = "io.spray" %% "spray-json" % sprayJsonVersion
@@ -39,7 +41,7 @@ object ScaleBuild extends Build {
   import Dependencies._
   import BuildSettings._
 
-  val commonDeps = Seq(specs2)
+  val commonDeps = Seq(specs2, scalacheck)
 
   val coreDeps = commonDeps ++ Seq(jts,proj4j)
 
