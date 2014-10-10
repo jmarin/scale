@@ -38,7 +38,7 @@ class GeoJsonProtocolSpec extends Specification {
   val polyWithHoleJson = """{"type":"Polygon","coordinates":[[[100.0,0.0,0.0],[101.0,0.0,0.0],[101.0,1.0,0.0],[100.0,1.0,0.0],[100.0,0.0,0.0]],[[100.2,0.2,0.0],[100.8,0.2,0.0],[100.8,0.8,0.0],[100.2,0.2,0.0]]]}"""
   val mpJson = """{"type":"MultiPoint","coordinates":[[-77.1,38.5,0.0],[-102.2,45.8,0.0]]}"""
   val mlJson = """{"type":"MultiLineString","coordinates":[[[-77.1,38.5,0.0],[-102.2,45.8,0.0]],[[-102.2,45.8,0.0],[-85.1,39.1,0.0]]]}"""
-  val mpolyJson = """{"type":"MultiPolygon","coordinates":}"""
+  val mpolyJson = """{"type":"MultiPolygon","coordinates":[[[[-77.1,38.5,0.0],[-102.2,45.8,0.0],[-85.1,39.1,0.0],[-77.1,38.5,0.0]],[[-78.0,32.0,0.0],[-77.0,32.0,0.0],[-76.0,35.0,0.0],[-78.0,32.0,0.0]]]]}"""
 
   "The JSON protocol" should {
     "write Point to GeoJSON" in {
@@ -46,14 +46,12 @@ class GeoJsonProtocolSpec extends Specification {
     }
     "read GeoJSON into Point" in {
       p1.toJson.convertTo[Point] must be equalTo (p1)
-      p1.jtsGeometry.isValid must beTrue
     }
     "write Line to GeoJSON" in {
       l1.toJson.toString must be equalTo (lineJson)
     }
     "read GeoJSON into Line" in {
       l1.toJson.convertTo[Line] must be equalTo (l1)
-      l1.jtsGeometry.isValid must beTrue
     }
     "write Polygon to GeoJSON" in {
       poly1.toJson.toString must be equalTo (polyJson)
@@ -79,11 +77,11 @@ class GeoJsonProtocolSpec extends Specification {
     "read GeoJSON into MultiLine" in {
       ml.toJson.convertTo[MultiLine] must be equalTo (ml)
     }
-    "read GeoJSON into MultiPolygon" in {
+    "write MultiPolygon to GeoJSON" in {
       mpoly.toJson.toString must be equalTo (mpolyJson)
     }
-    "write MultiPolygon to GeoJSON" in {
-      mpolyJson.toJson.convertTo[MultiPolygon] must be equalTo (mpoly)
+    "read GeoJSON into MultiPolygon" in {
+      mpoly.toJson.convertTo[MultiPolygon] must be equalTo (mpoly)
     }
   }
 }

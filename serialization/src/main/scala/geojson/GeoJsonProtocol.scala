@@ -7,7 +7,7 @@ import feature._
 
 object GeoJsonProtocol extends DefaultJsonProtocol with NullOptions {
 
-  implicit object PointFormat extends JsonFormat[Point] {
+  implicit object PointFormat extends RootJsonFormat[Point] {
     def write(p: Point): JsValue = {
       JsObject(
         "type" -> JsString("Point"),
@@ -16,21 +16,21 @@ object GeoJsonProtocol extends DefaultJsonProtocol with NullOptions {
 
     def read(json: JsValue): Point = {
       json.asJsObject.getFields("type", "coordinates") match {
-        case Seq(JsString(t), JsArray(Vector(JsNumber(x), JsNumber(y), JsNumber(z)))) =>
+        case Seq(JsString("Point"), JsArray(Vector(JsNumber(x), JsNumber(y), JsNumber(z)))) =>
           Point(x.toDouble, y.toDouble, z.toDouble)
         case _ => throw new DeserializationException("Point GeoJSON expected")
       }
     }
   }
 
-  implicit object LineFormat extends JsonFormat[Line] {
+  implicit object LineFormat extends RootJsonFormat[Line] {
     def write(l: Line): JsValue = {
       toCoords(l.points.toVector, "LineString")
     }
 
     def read(json: JsValue): Line = {
       json.asJsObject.getFields("type", "coordinates") match {
-        case Seq(JsString(t), JsArray(p)) =>
+        case Seq(JsString("LineString"), JsArray(p)) =>
           val points = toPoints(p)
           Line(points)
         case _ => throw new DeserializationException("LineString GeoJSON expected")
@@ -38,7 +38,7 @@ object GeoJsonProtocol extends DefaultJsonProtocol with NullOptions {
     }
   }
 
-  implicit object PolygonFormat extends JsonFormat[Polygon] {
+  implicit object PolygonFormat extends RootJsonFormat[Polygon] {
     def write(p: Polygon): JsValue = {
       val pext = p.boundary.points
       val holes = p.holes
@@ -61,7 +61,7 @@ object GeoJsonProtocol extends DefaultJsonProtocol with NullOptions {
     }
     def read(json: JsValue): Polygon = {
       json.asJsObject.getFields("type", "coordinates") match {
-        case Seq(JsString(t), JsArray(p)) =>
+        case Seq(JsString("Polygon"), JsArray(p)) =>
           val lines = toLines(p).toList
           Polygon(lines.head, lines.tail.toArray)
         case _ => throw new DeserializationException("Polygon GeoJSON expected")
@@ -69,13 +69,13 @@ object GeoJsonProtocol extends DefaultJsonProtocol with NullOptions {
     }
   }
 
-  implicit object MultiPointFormat extends JsonFormat[MultiPoint] {
+  implicit object MultiPointFormat extends RootJsonFormat[MultiPoint] {
     def write(p: MultiPoint): JsValue = {
       toCoords(p.points.toVector, "MultiPoint")
     }
     def read(json: JsValue): MultiPoint = {
       json.asJsObject.getFields("type", "coordinates") match {
-        case Seq(JsString(t), JsArray(p)) =>
+        case Seq(JsString("MultiPoint"), JsArray(p)) =>
           val points = toPoints(p)
           MultiPoint(points)
         case _ => throw new DeserializationException("MultiPoint GeoJSON expected")
@@ -83,14 +83,14 @@ object GeoJsonProtocol extends DefaultJsonProtocol with NullOptions {
     }
   }
 
-  implicit object MultiLineFormat extends JsonFormat[MultiLine] {
+  implicit object MultiLineFormat extends RootJsonFormat[MultiLine] {
     def write(ml: MultiLine): JsValue = {
       val lines = ml.geometries
       toCoords(lines, "MultiLineString")
     }
     def read(json: JsValue): MultiLine = {
       json.asJsObject.getFields("type", "coordinates") match {
-        case Seq(JsString(t), JsArray(l)) =>
+        case Seq(JsString("MultiLineString"), JsArray(l)) =>
           val lines = toLines(l)
           MultiLine(lines.toArray)
         case _ => throw new DeserializationException("MultiLineString GeoJSON expected")
@@ -98,9 +98,19 @@ object GeoJsonProtocol extends DefaultJsonProtocol with NullOptions {
     }
   }
 
-  implicit object MultiPolygonFormat extends JsonFormat[MultiPolygon] {
-    def write(p: MultiPolygon): JsValue = ???
-    def read(json: JsValue): MultiPolygon = ???
+  implicit object MultiPolygonFormat extends RootJsonFormat[MultiPolygon] {
+    def write(p: MultiPolygon): JsValue = {
+      val rings = p.geometries
+      toMultiCoords(rings, "MultiPolygon")
+    }
+    def read(json: JsValue): MultiPolygon = {
+      json.asJsObject.getFields("type", "coordinates") match {
+        case Seq(JsString("MultiPolygon"), JsArray(polys)) =>
+          val polygons = toPolygons(polys)
+          MultiPolygon(polygons.toArray)
+        case _ => throw new DeserializationException("MultiPolygon GeoJSON expected")
+      }
+    }
   }
 
   private def toPoints(coords: Vector[JsValue]): Vector[Point] = {
@@ -120,6 +130,23 @@ object GeoJsonProtocol extends DefaultJsonProtocol with NullOptions {
         "coordinates" -> x
       )
       line.convertTo[Line]
+    }
+  }
+
+  private def toPolygons(polys: Vector[JsValue]): Vector[Polygon] = {
+    polys(0) match {
+      case polyArr: JsArray =>
+        polyArr.elements.map { x =>
+          val points = x match {
+            case ptArr: JsArray =>
+              ptArr.elements.flatMap { p =>
+                toPoints(Vector(p))
+              }
+            case _ => Nil
+          }
+          Polygon(points)
+        }
+      case _ => Vector()
     }
   }
 
@@ -144,6 +171,23 @@ object GeoJsonProtocol extends DefaultJsonProtocol with NullOptions {
             }.toVector
           )
         }.toVector
+      )
+    )
+  }
+
+  private def toMultiCoords(geometries: List[jts.Geometry], `type`: String): JsValue = {
+    JsObject(
+      "type" -> JsString(`type`),
+      "coordinates" -> JsArray(
+        JsArray(
+          geometries.map { g =>
+            JsArray(
+              g.getCoordinates.map { c =>
+                JsArray(JsNumber(c.x), JsNumber(c.y), JsNumber(c.z))
+              }.toVector
+            )
+          }.toVector
+        )
       )
     )
   }
