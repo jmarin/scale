@@ -11,6 +11,10 @@ object MultiLine {
     apply(lines.toArray)
   }
 
+  def apply(lines: List[Line]): MultiLine = {
+    apply(lines.toArray)
+  }
+
   def apply(lines: Array[Line]): MultiLine = {
     val jtsLines = lines.map(l => l.jtsGeometry)
     MultiLine(new jts.MultiLineString(jtsLines, geomFactory))

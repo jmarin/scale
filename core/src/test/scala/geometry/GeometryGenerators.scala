@@ -38,5 +38,11 @@ trait GeometryGenerators {
       pts <- Gen.listOf[Point](points)
     } yield MultiPoint(pts)
   }
+
+  def multilines: Gen[MultiLine] = {
+    for {
+      lines <- Gen.listOf[Line](lines)
+    } yield MultiLine(lines)
+  }
 }
 
