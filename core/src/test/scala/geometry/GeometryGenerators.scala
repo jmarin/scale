@@ -32,5 +32,11 @@ trait GeometryGenerators {
       l <- lines
     } yield Line(p :: (p :: l.points.toList).reverse)
   }
+
+  def multipoints: Gen[MultiPoint] = {
+    for {
+      pts <- Gen.listOf[Point](points)
+    } yield MultiPoint(pts)
+  }
 }
 
