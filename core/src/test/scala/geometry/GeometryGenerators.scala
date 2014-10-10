@@ -20,6 +20,12 @@ trait GeometryGenerators {
     } yield Point(x, y, z)
   }
 
+  def pointList: Gen[List[Point]] = {
+    for {
+      pts <- Gen.listOfN[Point](50, points)
+    } yield pts
+  }
+
   implicit def lines: Gen[Line] = {
     for {
       pts <- Gen.listOfN[Point](10, points)
@@ -31,6 +37,13 @@ trait GeometryGenerators {
       p <- points
       l <- lines
     } yield Line(p :: (p :: l.points.toList).reverse)
+  }
+
+  def polygons: Gen[Polygon] = {
+    for {
+      p <- points
+      l <- closedLines
+    } yield Polygon(p :: (p :: l.points.toList).reverse)
   }
 
   def multipoints: Gen[MultiPoint] = {
