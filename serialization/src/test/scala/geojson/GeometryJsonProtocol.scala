@@ -7,7 +7,7 @@ import spray.json._
 
 class GeoJsonProtocolSpec extends Specification {
 
-  import geojson.GeoJsonProtocol._
+  import geojson.GeometryJsonProtocol._
 
   val p1 = Point(-77.1, 38.5)
   val p2 = Point(-102.2, 45.8)

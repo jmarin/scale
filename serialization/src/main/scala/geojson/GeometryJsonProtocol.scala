@@ -5,7 +5,7 @@ import spray.json._
 import geometry._
 import feature._
 
-object GeoJsonProtocol extends DefaultJsonProtocol with NullOptions {
+object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
 
   implicit object PointFormat extends RootJsonFormat[Point] {
     def write(p: Point): JsValue = {
