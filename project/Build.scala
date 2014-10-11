@@ -1,6 +1,7 @@
 import sbt._
 import Keys._
 import com.typesafe.sbt.SbtScalariform._
+import sbtprotobuf.{ProtobufPlugin=>PB}
 
 object BuildSettings {
   val buildOrganization = "scale"
@@ -63,8 +64,12 @@ object ScaleBuild extends Build {
   lazy val serialization = Project(
     "serialization",
     file("serialization"),
-    settings = buildSettings ++ Seq(resolvers := opengeoResolver,
-                                    libraryDependencies ++= serializeDeps)
+    settings = buildSettings 
+                ++ PB.protobufSettings
+                ++ Seq(
+                  resolvers := opengeoResolver,
+                  javaSource in PB.protobufConfig <<= (sourceDirectory in Compile)(_ / "java"),
+                  libraryDependencies ++= serializeDeps)
   ).dependsOn(core)
 
 }
