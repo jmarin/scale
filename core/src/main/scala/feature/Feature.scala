@@ -14,22 +14,22 @@ object Feature {
 
   lazy val crsFactory = new CRSFactory
 
-  def apply[K, V](id: String, geometry: Geometry): Feature[String, Any] = {
+  def apply(id: String, geometry: Geometry): Feature = {
     val crs = crsFactory.createFromName("EPSG:4326")
     Feature(id, crs, geometry, Map.empty[String, Any])
   }
 
-  def apply[K, V](id: String, srid: Int, geometry: Geometry): Feature[String, Any] = {
+  def apply(id: String, srid: Int, geometry: Geometry): Feature = {
     val crs = crsFactory.createFromName(s"EPSG:$srid")
     Feature(id, crs, geometry, Map.empty[String, Any])
   }
 
-  def apply[K, V](id: String, geometry: Geometry, values: Map[K, V]): Feature[K, V] = {
+  def apply(id: String, geometry: Geometry, values: Map[String, Any]): Feature = {
     val crs = crsFactory.createFromName("EPSG:4326")
     Feature(id, crs, geometry, values)
   }
 
-  def apply[K, V](id: String, srid: Int, geometry: Geometry, values: Map[K, V]): Feature[K, V] = {
+  def apply(id: String, srid: Int, geometry: Geometry, values: Map[String, Any]): Feature = {
     val crs = crsFactory.createFromName(s"EPSG:$srid")
     Feature(id, crs, geometry, values)
   }
@@ -39,7 +39,7 @@ object Feature {
 /**
  * The last parameter `values` is a map of (fieldName --> value)
  */
-case class Feature[K, V](id: String, crs: CoordinateReferenceSystem, geometry: Geometry, values: Map[K, V]) {
+case class Feature(id: String, crs: CoordinateReferenceSystem, geometry: Geometry, values: Map[String, Any]) {
 
   lazy val ctf = new CoordinateTransformFactory
 
@@ -47,15 +47,15 @@ case class Feature[K, V](id: String, crs: CoordinateReferenceSystem, geometry: G
 
   def countFields: Int = values.size
 
-  def addOrUpdate(k: K, v: V): Feature[K, V] = Feature(id, crs, geometry, values.updated(k, v))
+  def addOrUpdate(k: String, v: Any): Feature = Feature(id, crs, geometry, values.updated(k, v))
 
   def updateGeometry(geom: Geometry) = Feature(id, crs, geom, values)
 
-  def get(k: K): Option[V] = values.get(k)
+  def get(k: String): Option[Any] = values.get(k)
 
   def envelope: Envelope = geometry.envelope
 
-  def project(srid: Int): Feature[K, V] = {
+  def project(srid: Int): Feature = {
     val outCRS = crsFactory.createFromName(s"EPSG:$srid")
     val transform = ctf.createTransform(crs, outCRS)
     val projGeom = geometry.geometryType match {

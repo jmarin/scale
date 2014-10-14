@@ -6,12 +6,12 @@ import feature._
 
 object FeatureCollection {
 
-  def apply[K, V](features: Feature[K, V]*): FeatureCollection[K, V] = {
+  def apply(features: Feature*): FeatureCollection = {
     FeatureCollection(features.toIterable)
   }
 }
 
-case class FeatureCollection[K, V](features: Traversable[Feature[K, V]]) {
+case class FeatureCollection(features: Traversable[Feature]) {
 
   def count: Int = features.size
 
