@@ -5,7 +5,7 @@ import geometry._
 import feature._
 import spray.json._
 
-class GeoJsonProtocolSpec extends Specification {
+class GeometryJsonProtocolSpec extends Specification {
 
   import geojson.GeometryJsonProtocol._
 
