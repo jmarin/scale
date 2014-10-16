@@ -27,23 +27,25 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
         "geometry" -> geometry,
         "properties" -> JsObject(
           values.keys.map { k =>
-            println(values.get(k))
-            k.toString -> jsValue(values.get(k))
+            k.toString -> toJsValue(values.get(k))
           }.toMap
         )
       )
     }
 
     def read(json: JsValue): Feature = {
-      json.asJsObject.getFields("geometry", "properties") match {
-        case Seq(JsString(geometry), JsArray(properties)) =>
+      json.asJsObject.getFields("type", "geometry", "properties") match {
+        case Seq(JsString("Feature"), geom: JsValue, props: JsValue) =>
+          Feature("1", geometry(geom), Map("desc" -> "ONE"))
+        case _ =>
           Feature("1", Point(0, 0), Map("desc" -> "ONE"))
       }
+
     }
 
   }
 
-  private def jsValue[T](s: T): JsValue = s match {
+  private def toJsValue[T](s: T): JsValue = s match {
     case Some(v) => v match {
       case _: Int => JsNumber(v.asInstanceOf[Int])
       case _: String => JsString(v.asInstanceOf[String])
@@ -56,6 +58,30 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
       case _ => JsNull
     }
     case None => JsNull
+  }
+
+  private def fromJsValue(v: JsValue): Any = v match {
+    case JsString(s) => s.toString
+    case JsNumber(s) => s
+    case JsTrue => true
+    case JsFalse => false
+    case JsNull => None
+    case _ => v.toString
+  }
+
+  private def geometry(json: JsValue): Geometry = {
+    json.asJsObject.getFields("type", "coordinates") match {
+      case Seq(JsString(geomType), props: JsValue) =>
+        geomType match {
+          case "Point" => json.toJson.convertTo[Point]
+          case "Line" => json.toJson.convertTo[Line]
+          case "Polygon" => json.toJson.convertTo[Polygon]
+          case "MultiPoint" => json.toJson.convertTo[MultiPoint]
+          case "MultiLine" => json.toJson.convertTo[MultiLine]
+          case "MultiPolygon" => json.toJson.convertTo[MultiPolygon]
+        }
+      case _ => throw new DeserializationException("GeoJSON expected")
+    }
   }
 
 }
