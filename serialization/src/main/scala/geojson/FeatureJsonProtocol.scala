@@ -26,9 +26,11 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
         "type" -> JsString("Feature"),
         "geometry" -> geometry,
         "properties" -> JsObject(
-          values.keys.map { k =>
-            k.toString -> toJsValue(values.get(k))
-          }.toMap
+          values.keys
+            .filter((k: String) => k != "geometry")
+            .map { k =>
+              k.toString -> toJsValue(values.get(k))
+            }.toMap
         )
       )
     }
@@ -36,9 +38,37 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
     def read(json: JsValue): Feature = {
       json.asJsObject.getFields("type", "geometry", "properties") match {
         case Seq(JsString("Feature"), geom: JsValue, props: JsValue) =>
-          Feature("1", geometry(geom), Map("desc" -> "ONE"))
+          val geometry = toGeometry(geom)
+          val fields = props.asJsObject.fields.map { x =>
+            val k = x._1
+            val v = x._2 match {
+              case JsString(s) => StringType()
+              case JsNull => StringType()
+              case JsTrue => BooleanType()
+              case JsFalse => BooleanType()
+              case JsNumber(n) => DoubleType()
+              case JsArray(_) => StringType()
+              case JsObject(_) => StringType()
+            }
+            Field(k, v)
+          }
+          val fieldList = Field("geometry", GeometryType()) :: fields.toList
+          val schema = Schema(fieldList.toArray)
+          val values = props.asJsObject.fields.map { x =>
+            val v = x._2 match {
+              case JsString(s) => s.toString
+              case JsNull => None
+              case JsTrue => true
+              case JsFalse => false
+              case JsNumber(n) => n
+              case _ => None
+            }
+            (x._1, v)
+          }
+          val geomValue = Map("geometry" -> geometry)
+          Feature(schema, geomValue ++ values)
         case _ =>
-          Feature("1", Point(0, 0), Map("desc" -> "ONE"))
+          Feature(Point(0, 0))
       }
 
     }
@@ -69,7 +99,7 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
     case _ => v.toString
   }
 
-  private def geometry(json: JsValue): Geometry = {
+  private def toGeometry(json: JsValue): Geometry = {
     json.asJsObject.getFields("type", "coordinates") match {
       case Seq(JsString(geomType), props: JsValue) =>
         geomType match {

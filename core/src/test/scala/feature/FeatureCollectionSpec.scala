@@ -17,9 +17,11 @@ class FeatureCollectionSpec extends Specification {
   val boundary = Line(p1, p2, p3, p4)
   val polyWithHoles = Polygon(boundary, ring)
   val id = "1"
-  val values = Map("DESCRIPTION" -> "First Point")
-  val fp = Feature(id, polygon, values)
-  val fph = Feature(id, polyWithHoles, values)
+  val values = Map("geometry" -> polygon, "DESCRIPTION" -> "First Point")
+  val valuesWithHole = Map("geometry" -> polyWithHoles, "DESCRIPTION" -> "First Point")
+  val schema = Schema(List(Field("geometry", GeometryType()), Field("DESCRIPTION", StringType())))
+  val fp = Feature(schema, values)
+  val fph = Feature(schema, valuesWithHole)
   val fc = FeatureCollection(fp, fph)
 
   "A FeatureCollection" should {
