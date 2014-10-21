@@ -75,6 +75,26 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
 
   }
 
+  implicit object FeatureCollectionFormat extends RootJsonFormat[FeatureCollection] {
+    def write(fc: FeatureCollection): JsValue = {
+      JsObject(
+        "type" -> JsString("FeatureCollection"),
+        "features" -> JsArray(fc.features.map(f => FeatureFormat.write(f)).toVector)
+      )
+    }
+
+    def read(json: JsValue): FeatureCollection = {
+      json.asJsObject.getFields("type", "features") match {
+        case Seq(JsString("FeatureCollection"), fjson: JsArray) =>
+          val features = fjson.elements.map { f =>
+            FeatureFormat.read(f)
+          }.toArray
+          FeatureCollection(features)
+        case _ => throw new DeserializationException("GeoJSON FeatureCollection expected")
+      }
+    }
+  }
+
   private def toJsValue[T](s: T): JsValue = s match {
     case Some(v) => v match {
       case _: Int => JsNumber(v.asInstanceOf[Int])

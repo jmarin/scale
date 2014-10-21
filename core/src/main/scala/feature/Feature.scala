@@ -42,9 +42,6 @@ object Feature {
 
 }
 
-/**
- * The last parameter `values` is a map of (fieldName --> value)
- */
 case class Feature(crs: CoordinateReferenceSystem, schema: Schema, values: Map[String, Any]) {
 
   lazy val ctf = new CoordinateTransformFactory
