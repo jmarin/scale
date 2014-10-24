@@ -17,7 +17,7 @@ object GeometryServiceApp {
       val config = ConfigFactory.parseString(s"akka.remote.netty.tcp.port=$port").
         withFallback(ConfigFactory.load())
 
-      val system = ActorSystem("ClusterSystem", config)
+      val system = ActorSystem("GeometrySystem", config)
 
     }
   }
