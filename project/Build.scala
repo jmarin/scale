@@ -29,12 +29,20 @@ object Dependencies {
   val jtsVersion    = "1.13"
   val proj4jVersion = "0.1.0"
   val sprayJsonVersion = "1.3.0"
+  val akkaVersion = "2.3.6"
+  val akkaStreamVersion = "0.9"
 
   val specs2 = "org.specs2" %% "specs2" % specs2Version % "test" 
   val scalacheck = "org.scalacheck" %% "scalacheck" % scalacheckVersion % "test"
   val jts    = "com.vividsolutions" %  "jts" % jtsVersion
   val proj4j = "org.osgeo" % "proj4j" % proj4jVersion
   val sprayJson = "io.spray" %% "spray-json" % sprayJsonVersion
+  val akkaCluster = "com.typesafe.akka" %% "akka-cluster" % akkaVersion
+  val akkaSlf4j = "com.typesafe.akka" %% "akka-slf4j" % akkaVersion
+  val akkaStream = "com.typesafe.akka" % "akka-stream-experimental_2.11" % akkaStreamVersion
+  val akkaHttpCore = "com.typesafe.akka" % "akka-http-core-experimental_2.11" % akkaStreamVersion
+  val akkaTestkit = "com.typesafe.akka" %% "akka-testkit" % akkaVersion % "test"
+ 
 }
 
 object ScaleBuild extends Build {
@@ -48,11 +56,13 @@ object ScaleBuild extends Build {
 
   val serializeDeps = coreDeps ++ Seq(sprayJson)
 
+  val geometryServiceDeps = coreDeps ++ Seq(akkaCluster, akkaSlf4j, akkaTestkit, akkaStream, akkaHttpCore)
+
   lazy val scale = Project(
     "scale",
     file("."),
     settings = buildSettings
-  ).aggregate(core, serialization)
+  ).aggregate(core, serialization, geometry)
 
   lazy val core = Project(
     "core",
@@ -70,6 +80,19 @@ object ScaleBuild extends Build {
                   resolvers := opengeoResolver,
                   javaSource in PB.protobufConfig <<= (sourceDirectory in Compile)(_ / "java"),
                   libraryDependencies ++= serializeDeps)
+  ).dependsOn(core)
+
+  lazy val geometry = Project(
+    "geometry",
+    file("geometry"),
+    settings = buildSettings 
+      ++ Seq(
+        mainClass in (Compile, run) := Some("server.GeometryServiceApp"),
+        javaOptions in run ++= Seq(
+      //"-Djava.library.path=./sigar",
+         "-Xms128m", "-Xmx1024m"),
+       libraryDependencies ++= geometryServiceDeps
+      )
   ).dependsOn(core)
 
 }
