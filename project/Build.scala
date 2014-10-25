@@ -56,7 +56,7 @@ object ScaleBuild extends Build {
 
   val serializeDeps = coreDeps ++ Seq(sprayJson)
 
-  val geometryServiceDeps = coreDeps ++ Seq(akkaCluster, akkaSlf4j, akkaTestkit, akkaStream, akkaHttpCore)
+  val geometryServiceDeps = coreDeps ++ serializeDeps ++ Seq(akkaCluster, akkaSlf4j, akkaTestkit, akkaStream, akkaHttpCore)
 
   lazy val scale = Project(
     "scale",
@@ -93,6 +93,6 @@ object ScaleBuild extends Build {
          "-Xms128m", "-Xmx1024m"),
        libraryDependencies ++= geometryServiceDeps
       )
-  ).dependsOn(core)
+  ).dependsOn(serialization)
 
 }
