@@ -9,9 +9,7 @@ import akka.pattern.ask
 import akka.stream.{ MaterializerSettings, FlowMaterializer }
 import akka.stream.scaladsl.Flow
 
-object GeometryServiceApp extends BaseApp {
-
-  import GeometryServiceHandler._
+object GeometryServiceApp extends BaseApp with GeometryServiceHandler {
 
   override protected def run(system: ActorSystem, opts: Map[String, String]): Unit = {
     implicit val actorRefFactory = system
@@ -25,7 +23,7 @@ object GeometryServiceApp extends BaseApp {
       case Http.ServerBinding(localAddress, connectionStream) =>
         Flow(connectionStream).foreach {
           case Http.IncomingConnection(remoteAddress, requestProducer, responseConsumer) =>
-            Flow(requestProducer).map(requestHandler).produceTo(responseConsumer)
+            Flow(requestProducer).map(requestHandler(system)).produceTo(responseConsumer)
         }
     }
 
