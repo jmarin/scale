@@ -20,7 +20,7 @@ object BuildSettings {
 }
 
 object Resolvers {
-  val opengeoResolver = Seq("OpenGeo Repository" at "http://repo.opengeo.org")
+  val boundlessResolver = Seq("Boundless Repository" at "http://repo.boundlessgeo.com/main")
 }
 
 object Dependencies {
@@ -57,7 +57,7 @@ object ScaleBuild extends Build {
   lazy val core = Project(
     "core",
     file("core"),
-    settings = buildSettings ++ Seq(resolvers := opengeoResolver,
+    settings = buildSettings ++ Seq(resolvers := boundlessResolver,
                                     libraryDependencies ++= coreDeps) 
   )
 
@@ -67,7 +67,7 @@ object ScaleBuild extends Build {
     settings = buildSettings 
                 ++ PB.protobufSettings
                 ++ Seq(
-                  resolvers := opengeoResolver,
+                  resolvers := boundlessResolver,
                   javaSource in PB.protobufConfig <<= (sourceDirectory in Compile)(_ / "java"),
                   libraryDependencies ++= serializeDeps)
   ).dependsOn(core)
