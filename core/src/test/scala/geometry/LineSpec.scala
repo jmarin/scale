@@ -79,6 +79,11 @@ class LineSpec extends Specification with ScalaCheck with GeometryGenerators {
     "Serialize to WKT" in {
       line.wkt must be equalTo ("LINESTRING (-77 39, -76 40, -75 38)")
     }
+
+    "Extract points at certain distances (Linear Referencing)" in {
+      line.pointAtDist(0.6) must be equalTo (Point(-76.57573593128807, 39.42426406871193))
+      line.pointAtDist(-0.6) must be equalTo (Point(-75.26832815729998, 38.53665631459995))
+    }
   }
 
 }
