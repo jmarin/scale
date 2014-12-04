@@ -6,7 +6,7 @@ import sbtprotobuf.{ProtobufPlugin=>PB}
 object BuildSettings {
   val buildOrganization = "scale"
   val buildVersion = "0.0.1-SNAPSHOT"
-  val buildScalaVersion = "2.11.2"
+  val buildScalaVersion = "2.11.4"
 
   val buildSettings = Defaults.defaultSettings ++ 
     scalariformSettings ++
@@ -55,14 +55,14 @@ object ScaleBuild extends Build {
   ).aggregate(core, serialization)
 
   lazy val core = Project(
-    "core",
+    "scale-core",
     file("core"),
     settings = buildSettings ++ Seq(resolvers := boundlessResolver,
                                     libraryDependencies ++= coreDeps) 
   )
 
   lazy val serialization = Project(
-    "serialization",
+    "scale-serialization",
     file("serialization"),
     settings = buildSettings 
                 ++ PB.protobufSettings
