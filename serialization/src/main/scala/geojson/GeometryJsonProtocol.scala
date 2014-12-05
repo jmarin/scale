@@ -18,6 +18,8 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
       json.asJsObject.getFields("type", "coordinates") match {
         case Seq(JsString("Point"), JsArray(Vector(JsNumber(x), JsNumber(y), JsNumber(z)))) =>
           Point(x.toDouble, y.toDouble, z.toDouble)
+        case Seq(JsString("Point"), JsArray(Vector(JsNumber(x), JsNumber(y)))) =>
+          Point(x.toDouble, y.toDouble)
         case _ => throw new DeserializationException("Point GeoJSON expected")
       }
     }

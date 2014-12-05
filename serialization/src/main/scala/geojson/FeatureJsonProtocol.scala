@@ -124,10 +124,10 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
       case Seq(JsString(geomType), props: JsValue) =>
         geomType match {
           case "Point" => json.toJson.convertTo[Point]
-          case "Line" => json.toJson.convertTo[Line]
+          case "LineString" => json.toJson.convertTo[Line]
           case "Polygon" => json.toJson.convertTo[Polygon]
           case "MultiPoint" => json.toJson.convertTo[MultiPoint]
-          case "MultiLine" => json.toJson.convertTo[MultiLine]
+          case "MultiLineString" => json.toJson.convertTo[MultiLine]
           case "MultiPolygon" => json.toJson.convertTo[MultiPolygon]
         }
       case _ => throw new DeserializationException("GeoJSON expected")
