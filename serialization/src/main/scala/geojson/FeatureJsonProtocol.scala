@@ -14,7 +14,7 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
       val geom = f.geometry.jtsGeometry
       val geometry = f.geometry.geometryType match {
         case "Point" => Point(geom.asInstanceOf[jts.Point]).toJson
-        case "Line" => Line(geom.asInstanceOf[jts.LineString]).toJson
+        case "LineString" => Line(geom.asInstanceOf[jts.LineString]).toJson
         case "Polygon" => Polygon(geom.asInstanceOf[jts.Polygon]).toJson
         case "MultiPoint" => MultiPoint(geom.asInstanceOf[jts.MultiPoint]).toJson
         case "MultiLineString" => MultiLine(geom.asInstanceOf[jts.MultiLineString]).toJson
