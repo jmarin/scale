@@ -48,11 +48,13 @@ object ScaleBuild extends Build {
 
   val serializeDeps = coreDeps ++ Seq(sprayJson)
 
+  val ioDeps = coreDeps
+
   lazy val scale = Project(
     "scale",
     file("."),
     settings = buildSettings
-  ).aggregate(core, serialization)
+  ).aggregate(core, serialization, io)
 
   lazy val core = Project(
     "scale-core",
@@ -70,6 +72,12 @@ object ScaleBuild extends Build {
                   resolvers := boundlessResolver,
                   javaSource in PB.protobufConfig <<= (sourceDirectory in Compile)(_ / "java"),
                   libraryDependencies ++= serializeDeps)
+  ).dependsOn(core)
+
+  lazy val io = Project(
+    "scale-io",
+    file("io"),
+    settings = buildSettings ++ Seq(libraryDependencies ++= ioDeps)
   ).dependsOn(core)
 
 }
