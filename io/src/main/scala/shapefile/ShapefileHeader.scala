@@ -33,8 +33,11 @@ object ShapefileHeader {
     val paths = Paths.get(path)
     val bytes = Files.readAllBytes(paths)
     val bb = ByteBuffer.wrap(bytes)
-    bb.order(ByteOrder.BIG_ENDIAN)
+    apply(bb)
+  }
 
+  def apply(bb: ByteBuffer): ShapefileHeader = {
+    bb.order(ByteOrder.BIG_ENDIAN)
     val fileCode = bb.getInt(0)
     require(fileCode == 9994, "This is not a shapefile, wrong File Code")
 
@@ -69,6 +72,7 @@ object ShapefileHeader {
     val mmin = bb.getDouble(84)
     val mmax = bb.getDouble(92)
     val envelope = Envelope(xmin, ymin, xmax, ymax)
+    bb.position(100) //Move ByteBuffer to position 100 (length of header)
     ShapefileHeader(length, shapeType, envelope)
   }
 

@@ -26,9 +26,9 @@ class ShapefileHeaderSpec extends Specification {
       polyHeader.shapeType must be equalTo (Polygon())
 
     }
-    "Read correct number of recrods" in {
-
-      1 === 1
+    "Read correct number of records" in {
+      val shpPoint = ShapefileReader(pointShp)
+      shpPoint.geometries.size must be equalTo (3)
     }
   }
 
