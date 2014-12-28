@@ -31,9 +31,8 @@ class ShapefileHeaderSpec extends Specification {
       shpPoint.geometries.size must be equalTo (3)
       val shpLine = ShapefileReader(lineShp)
       shpLine.geometries.size must be equalTo (3)
-      //val shpPolygon = ShapefileReader(polyShp)
-      //shpPolygon.geometries.size must be equalTo (3)
-
+      val shpPolygon = ShapefileReader(polyShp)
+      shpPolygon.geometries.size must be equalTo (3)
     }
   }
 

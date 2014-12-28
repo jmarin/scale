@@ -68,6 +68,40 @@ object ShapefileReader {
     loop(Nil, bb.remaining)
   }
 
+  def readPolygons(bb: ByteBuffer): List[geometry.Polygon] = {
+    def loop(list: List[geometry.Polygon], n: Int): List[geometry.Polygon] = n match {
+      case 0 => list
+      case _ =>
+        val header = readRecordHeader(bb)
+        val shapeType = bb.getInt()
+        val xmin = bb.getDouble()
+        val ymin = bb.getDouble()
+        val xmax = bb.getDouble()
+        val ymax = bb.getDouble()
+        val envelope = Envelope(xmin, ymin, xmax, ymax)
+        val numParts = bb.getInt()
+        val numPoints = bb.getInt()
+        for (i <- 1 to numParts) {
+          bb.getInt()
+        }
+
+        def loopPoints(points: List[geometry.Point], a: Int): List[geometry.Point] = a match {
+          case 0 => points
+          case _ => {
+            val x = bb.getDouble()
+            val y = bb.getDouble()
+            val point = geometry.Point(x, y)
+            loopPoints(point :: points, a - 1)
+          }
+        }
+
+        val points = loopPoints(Nil, numPoints)
+        val polygon = geometry.Polygon(points)
+        loop(polygon :: list, bb.remaining)
+    }
+    loop(Nil, bb.remaining)
+  }
+
   def apply(path: String): ShapefileReader = {
     val paths = Paths.get(path)
     val bytes = Files.readAllBytes(paths)
@@ -82,8 +116,7 @@ object ShapefileReader {
       case PolyLine(3) =>
         readPolyLines(bb)
       case Polygon(5) =>
-        throw new Exception("Polygon not supported yet")
-        Nil
+        readPolygons(bb)
       case MultiPoint(8) =>
         throw new Exception("MultiPoint not supported yet")
         Nil
