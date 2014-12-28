@@ -16,7 +16,7 @@ class ShapefileHeaderSpec extends Specification {
       val lineHeader = ShapefileHeader(lineShp)
       val polyHeader = ShapefileHeader(polyShp)
       val pointEnv = Envelope(-98.65384615384608, 64.82672995375012, 158.8846153846156, -15.134808507788364)
-      val lineEnv = Envelope(-111.11538461538454, -29.154039277019137, -45.17307692307682, 55.480576107596306)
+      val lineEnv = Envelope(-75.94530094304724, 38.82821502216727, -65.0545603735206, 52.43181154583593)
       val polyEnv = Envelope(-78.53365384615375, 42.82432610759628, -64.90384615384605, 48.73057610759628)
       pointHeader.envelope must be equalTo (pointEnv)
       lineHeader.envelope must be equalTo (lineEnv)
@@ -29,6 +29,11 @@ class ShapefileHeaderSpec extends Specification {
     "Read correct number of records" in {
       val shpPoint = ShapefileReader(pointShp)
       shpPoint.geometries.size must be equalTo (3)
+      val shpLine = ShapefileReader(lineShp)
+      shpLine.geometries.size must be equalTo (3)
+      //val shpPolygon = ShapefileReader(polyShp)
+      //shpPolygon.geometries.size must be equalTo (3)
+
     }
   }
 
