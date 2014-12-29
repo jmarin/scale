@@ -8,6 +8,7 @@ case class IntType() extends FieldType
 case class LongType() extends FieldType
 case class DoubleType() extends FieldType
 case class BigDecimalType() extends FieldType
+case class DateType() extends FieldType
 
 case class Field(name: String, fieldType: FieldType) {
   def isGeometry = if (fieldType == GeometryType()) true else false
