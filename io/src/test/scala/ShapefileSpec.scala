@@ -14,7 +14,6 @@ class ShapefileHeaderSpec extends Specification {
   "A Shapefile" should {
     "Have the correct header" in {
       val pointHeader = ShapefileHeader(pointShp)
-      //val dbfHeader = DBFHeader(pointDbf)
       val lineHeader = ShapefileHeader(lineShp)
       val polyHeader = ShapefileHeader(polyShp)
       val pointEnv = Envelope(-98.65384615384608, 64.82672995375012, 158.8846153846156, -15.134808507788364)
@@ -30,11 +29,11 @@ class ShapefileHeaderSpec extends Specification {
     }
     "Read correct number of records" in {
       val shpPoint = ShapefileReader(pointShp)
-      shpPoint.geometries.size must be equalTo (3)
+      shpPoint.fc.count must be equalTo (3)
       val shpLine = ShapefileReader(lineShp)
-      shpLine.geometries.size must be equalTo (3)
+      shpLine.fc.count must be equalTo (3)
       val shpPolygon = ShapefileReader(polyShp)
-      shpPolygon.geometries.size must be equalTo (3)
+      shpPolygon.fc.count must be equalTo (3)
     }
   }
 
