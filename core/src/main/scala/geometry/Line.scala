@@ -68,7 +68,12 @@ case class Line(jtsGeometry: jts.LineString) extends Geometry {
 
   def pointAtDist(d: Double): Point = {
     val coord = new com.vividsolutions.jts.linearref.LengthIndexedLine(jtsGeometry).extractPoint(d)
-    Point(coord.x, coord.y, coord.z)
+    Point(coord.x, coord.y)
+  }
+
+  def pointAtDistWithOffset(d: Double, offset: Double): Point = {
+    val coord = new com.vividsolutions.jts.linearref.LengthIndexedLine(jtsGeometry).extractPoint(d, offset)
+    Point(coord.x, coord.y)
   }
 
   def isCoordinate(point: Point): Boolean = {
