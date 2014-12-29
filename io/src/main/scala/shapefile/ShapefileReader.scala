@@ -7,6 +7,7 @@ import java.nio.ByteOrder
 
 import geometry.Envelope
 import scala.collection.mutable.ArrayBuffer
+import com.linuxense.javadbf._
 
 object ShapefileReader {
 
@@ -133,6 +134,7 @@ object ShapefileReader {
         throw new Exception("MultiPointZ not supported yet")
         Nil
     }
+    //val dbfHeader = 
     ShapefileReader(header, records)
   }
 

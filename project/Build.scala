@@ -29,12 +29,15 @@ object Dependencies {
   val jtsVersion    = "1.13"
   val proj4jVersion = "0.1.0"
   val sprayJsonVersion = "1.3.0"
+  val dbfVersion = "0.4.0"
 
   val specs2 = "org.specs2" %% "specs2" % specs2Version % "test" 
   val scalacheck = "org.scalacheck" %% "scalacheck" % scalacheckVersion % "test"
   val jts    = "com.vividsolutions" %  "jts" % jtsVersion
   val proj4j = "org.osgeo" % "proj4j" % proj4jVersion
   val sprayJson = "io.spray" %% "spray-json" % sprayJsonVersion
+
+  val dbf = "com.linuxense" % "javadbf" % dbfVersion
 }
 
 object ScaleBuild extends Build {
@@ -48,7 +51,7 @@ object ScaleBuild extends Build {
 
   val serializeDeps = coreDeps ++ Seq(sprayJson)
 
-  val ioDeps = coreDeps
+  val ioDeps = coreDeps ++ Seq(dbf)
 
   lazy val scale = Project(
     "scale",

@@ -7,12 +7,14 @@ import org.specs2.mutable.Specification
 class ShapefileHeaderSpec extends Specification {
 
   val pointShp = FileSystems.getDefault.getPath("io/src/test/resources", "Point.shp").toFile.getAbsolutePath
+  val pointDbf = FileSystems.getDefault.getPath("io/src/test/resources", "Point.dbf").toFile.getAbsolutePath
   val lineShp = FileSystems.getDefault.getPath("io/src/test/resources", "Line.shp").toFile.getAbsolutePath
   val polyShp = FileSystems.getDefault.getPath("io/src/test/resources", "Polygon.shp").toFile.getAbsolutePath
 
   "A Shapefile" should {
     "Have the correct header" in {
       val pointHeader = ShapefileHeader(pointShp)
+      //val dbfHeader = DBFHeader(pointDbf)
       val lineHeader = ShapefileHeader(lineShp)
       val polyHeader = ShapefileHeader(polyShp)
       val pointEnv = Envelope(-98.65384615384608, 64.82672995375012, 158.8846153846156, -15.134808507788364)
