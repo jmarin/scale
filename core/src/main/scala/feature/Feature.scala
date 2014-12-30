@@ -15,44 +15,44 @@ object Feature {
   lazy val crsFactory = new CRSFactory
 
   def apply(geometry: Geometry): Feature = {
-    val crs = crsFactory.createFromName("EPSG:4326")
     val geom = Field("geometry", GeometryType())
     val schema = Schema(geom)
     val values = Map("geometry" -> geometry)
-    Feature(crs, schema, values)
+    Feature(4326, schema, values)
   }
 
   def apply(srid: Int, geometry: Geometry): Feature = {
-    val crs = crsFactory.createFromName(s"EPSG:$srid")
     val geom = Field("geometry", GeometryType())
     val schema = Schema(geom)
     val values = Map("geometry" -> geometry)
-    Feature(crs, schema, values)
+    Feature(srid, schema, values)
   }
 
   def apply(schema: Schema, values: Map[String, Any]): Feature = {
-    val crs = crsFactory.createFromName("EPSG:4326")
-    Feature(crs, schema, values)
+    Feature(4326, schema, values)
   }
 
-  def apply(srid: Int, schema: Schema, values: Map[String, Any]): Feature = {
-    val crs = crsFactory.createFromName(s"EPSG:$srid")
-    Feature(crs, schema, values)
+  def apply(crs: CoordinateReferenceSystem, schema: Schema, values: Map[String, Any]): Feature = {
+    val name = crs.getName
+    val srid = name.split(":")(1).toInt
+    Feature(srid, schema, values)
   }
 
 }
 
-case class Feature(crs: CoordinateReferenceSystem, schema: Schema, values: Map[String, Any]) {
+case class Feature(srid: Int, schema: Schema, values: Map[String, Any]) {
 
   lazy val ctf = new CoordinateTransformFactory
 
   lazy val crsFactory = new CRSFactory
 
+  lazy val crs: CoordinateReferenceSystem = crsFactory.createFromName(s"EPSG:$srid")
+
   def countFields: Int = values.size
 
-  def addOrUpdate(k: String, v: Any): Feature = Feature(crs, schema, values.updated(k, v))
+  def addOrUpdate(k: String, v: Any): Feature = Feature(srid, schema, values.updated(k, v))
 
-  def updateGeometry(geom: Geometry) = Feature(crs, schema, values.updated("geometry", geom))
+  def updateGeometry(geom: Geometry) = Feature(srid, schema, values.updated("geometry", geom))
 
   def get(k: String): Option[Any] = values.get(k)
 
@@ -81,7 +81,7 @@ case class Feature(crs: CoordinateReferenceSystem, schema: Schema, values: Map[S
         projectMultiPolygon(transform, geometry.asInstanceOf[MultiPolygon])
 
     }
-    Feature(outCRS, schema, values.updated("geometry", projGeom))
+    Feature(srid, schema, values.updated("geometry", projGeom))
   }
 
   private def projectCoordinate(transform: CoordinateTransform, coord: jts.Coordinate): jts.Coordinate = {
