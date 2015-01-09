@@ -16,6 +16,8 @@ trait Geometry {
 
   def isEmpty: Boolean = jtsGeometry.isEmpty
 
+  def buffer(d: Double): Geometry = convertType(jtsGeometry.buffer(d))
+
   def contains(that: Geometry): Boolean = {
     jtsGeometry.contains(that.jtsGeometry)
   }

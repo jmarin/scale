@@ -1,5 +1,6 @@
 package geometry
 
+import scala.math.BigDecimal
 import scala.language.implicitConversions
 import com.vividsolutions.jts.{ geom => jts }
 import jts.Coordinate
@@ -36,10 +37,22 @@ object Point {
 
 case class Point(jtsGeometry: jts.Point) extends Geometry {
 
+  private def roundAt(p: Int, n: Double): Double = {
+    val s = math.pow(10, p)
+    math.round(n * s) / s
+  }
+
   def x: Double = jtsGeometry.getX
 
   def y: Double = jtsGeometry.getY
 
   def z: Double = jtsGeometry.getCoordinate.z
+
+  def roundCoordinates(s: Int): Point = {
+    val xr = roundAt(s, x)
+    val yr = roundAt(s, y)
+    val zr = roundAt(s, z)
+    Point(xr, yr, zr)
+  }
 
 }
