@@ -11,7 +11,7 @@ object FeatureCollection {
   }
 }
 
-case class FeatureCollection(features: Traversable[Feature]) {
+case class FeatureCollection(features: Iterable[Feature]) {
 
   def count: Int = features.size
 
