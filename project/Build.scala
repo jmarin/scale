@@ -31,19 +31,21 @@ object Dependencies {
   val sprayJsonVersion = "1.3.0"
   val dbfVersion = "0.4.0"
   val elasticsearchVersion = "1.4.2"
+  val configVersion = "1.2.1"
 
   //Core dependencies
   val specs2 = "org.specs2" %% "specs2" % specs2Version % "test" 
   val scalacheck = "org.scalacheck" %% "scalacheck" % scalacheckVersion % "test"
   val jts    = "com.vividsolutions" %  "jts" % jtsVersion
   val proj4j = "org.osgeo" % "proj4j" % proj4jVersion
-
+  
   //Serialization Dependencies
   val sprayJson = "io.spray" %% "spray-json" % sprayJsonVersion
 
   //io dependencies
   val dbf = "com.linuxense" % "javadbf" % dbfVersion
   val elasticsearch = "org.elasticsearch" % "elasticsearch" % elasticsearchVersion
+  val config = "com.typesafe" % "config" % configVersion
 }
 
 object ScaleBuild extends Build {
@@ -55,7 +57,7 @@ object ScaleBuild extends Build {
   val coreDeps = commonDeps ++ Seq(jts,proj4j)
   val serializeDeps = coreDeps ++ Seq(sprayJson)
   val shpDeps = coreDeps ++ Seq(dbf)
-  val esDeps = coreDeps ++ Seq(elasticsearch)
+  val esDeps = coreDeps ++ Seq(elasticsearch, config)
 
   lazy val scale = Project(
     "scale",
@@ -90,7 +92,7 @@ object ScaleBuild extends Build {
   lazy val es = Project(
     "scale-elasticsearch",
     file("io/elasticsearch"),
-    settings = buildSettings ++ Seq(libraryDependencies ++= shpDeps)
+    settings = buildSettings ++ Seq(libraryDependencies ++= esDeps)
   ).dependsOn(core)
 
 }
