@@ -6,7 +6,7 @@ import sbtprotobuf.{ProtobufPlugin=>PB}
 object BuildSettings {
   val buildOrganization = "scale"
   val buildVersion = "0.0.1-SNAPSHOT"
-  val buildScalaVersion = "2.11.4"
+  val buildScalaVersion = "2.11.5"
 
   val buildSettings = Defaults.defaultSettings ++ 
     scalariformSettings ++
@@ -93,6 +93,6 @@ object ScaleBuild extends Build {
     "scale-elasticsearch",
     file("io/elasticsearch"),
     settings = buildSettings ++ Seq(libraryDependencies ++= esDeps)
-  ).dependsOn(core)
+  ).dependsOn(core, serialization)
 
 }
