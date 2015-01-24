@@ -50,14 +50,14 @@ object ScaleBuild extends Build {
   val coreDeps = commonDeps ++ Seq(jts,proj4j)
 
   val serializeDeps = coreDeps ++ Seq(sprayJson)
-
-  val ioDeps = coreDeps ++ Seq(dbf)
+  val shpDeps = coreDeps ++ Seq(dbf)
+  val geojsonDeps = coreDeps ++ Seq(sprayJson)
 
   lazy val scale = Project(
     "scale",
     file("."),
     settings = buildSettings
-  ).aggregate(core, serialization, io)
+ ).aggregate(core, serialization, shp, geojson)
 
   lazy val core = Project(
     "scale-core",
@@ -77,10 +77,16 @@ object ScaleBuild extends Build {
                   libraryDependencies ++= serializeDeps)
   ).dependsOn(core)
 
-  lazy val io = Project(
-    "scale-io",
-    file("io"),
-    settings = buildSettings ++ Seq(libraryDependencies ++= ioDeps)
+  lazy val shp = Project(
+    "scale-shapefile",
+    file("io/shapefile"),
+    settings = buildSettings ++ Seq(libraryDependencies ++= shpDeps)
   ).dependsOn(core)
+
+  lazy val geojson = Project(
+    "scale-geojson",
+    file("io/geojson"),
+    settings = buildSettings ++ Seq(libraryDependencies ++= geojsonDeps)
+  ).dependsOn(core, serialization)
 
 }
