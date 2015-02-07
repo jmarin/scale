@@ -1,4 +1,4 @@
-package feature
+package io.geojson
 
 import org.specs2.mutable.Specification
 import geometry._
@@ -7,7 +7,7 @@ import spray.json._
 
 class FeatureCollectionJsonProtocolSpec extends Specification {
 
-  import geojson.FeatureJsonProtocol._
+  import io.geojson.FeatureJsonProtocol._
 
   val p1 = Point(-77, 39)
   val p2 = Point(-76, 40)

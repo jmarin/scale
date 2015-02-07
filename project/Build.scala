@@ -57,7 +57,7 @@ object ScaleBuild extends Build {
     "scale",
     file("."),
     settings = buildSettings
- ).aggregate(core, serialization, shp, geojson)
+ ).aggregate(core, shp, geojson)
 
   lazy val core = Project(
     "scale-core",
@@ -65,17 +65,6 @@ object ScaleBuild extends Build {
     settings = buildSettings ++ Seq(resolvers := boundlessResolver,
                                     libraryDependencies ++= coreDeps) 
   )
-
-  lazy val serialization = Project(
-    "scale-serialization",
-    file("serialization"),
-    settings = buildSettings 
-                ++ PB.protobufSettings
-                ++ Seq(
-                  resolvers := boundlessResolver,
-                  javaSource in PB.protobufConfig <<= (sourceDirectory in Compile)(_ / "java"),
-                  libraryDependencies ++= serializeDeps)
-  ).dependsOn(core)
 
   lazy val shp = Project(
     "scale-shapefile",
@@ -87,6 +76,6 @@ object ScaleBuild extends Build {
     "scale-geojson",
     file("io/geojson"),
     settings = buildSettings ++ Seq(libraryDependencies ++= geojsonDeps)
-  ).dependsOn(core, serialization)
+  ).dependsOn(core)
 
 }
