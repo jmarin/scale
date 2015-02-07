@@ -4,18 +4,49 @@ import com.typesafe.sbt.SbtScalariform._
 import sbtprotobuf.{ProtobufPlugin=>PB}
 
 object BuildSettings {
-  val buildOrganization = "scale"
+  val buildOrganization = "io.scale"
   val buildVersion = "0.0.1-SNAPSHOT"
-  val buildScalaVersion = "2.11.4"
+  val buildScalaVersion = "2.11.5"
 
-  val buildSettings = Defaults.defaultSettings ++ 
+  val buildSettings = Defaults.coreDefaultSettings ++ 
     scalariformSettings ++
     org.scalastyle.sbt.ScalastylePlugin.Settings ++
     Seq(
       organization := buildOrganization,
       version      := buildVersion,
       scalaVersion := buildScalaVersion,
-      scalacOptions ++= Seq("-deprecation","-unchecked","-feature")
+      scalacOptions ++= Seq("-deprecation","-unchecked","-feature"),
+      publishMavenStyle := true,
+      publishArtifact in Test := false,
+      publishTo := {
+       val nexus = "https://oss.sonatype.org/"
+       if (isSnapshot.value)
+         Some("snapshots" at nexus + "content/repositories/snapshots")
+       else
+         Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+      },
+      pomIncludeRepository := { _ => false },
+      pomExtra := (
+        <url>http://jmarin.github.io/scale</url>  
+        <licenses>
+          <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+          </license>
+        </licenses>
+        <scm>
+          <url>https://github.com/jmarin/scale.git</url>
+          <connection>scm:git:git@github.com:jmarin/scale.git</connection>
+        </scm>
+        <developers>
+          <developer>
+            <id>jmarin</id>
+            <name>Juan Marin Otero</name>
+            <url>http://jmarin.github.io/</url>
+          </developer>
+        </developers>
+      )
     )
 }
 
