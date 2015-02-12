@@ -4,13 +4,14 @@ import com.typesafe.sbt.SbtScalariform._
 import sbtprotobuf.{ProtobufPlugin=>PB}
 
 object BuildSettings {
-  val buildOrganization = "io.scale"
+  val buildOrganization = "com.github.jmarin"
   val buildVersion = "0.0.1-SNAPSHOT"
   val buildScalaVersion = "2.11.5"
 
   val buildSettings = Defaults.coreDefaultSettings ++ 
     scalariformSettings ++
     org.scalastyle.sbt.ScalastylePlugin.Settings ++
+    xerial.sbt.Sonatype.sonatypeSettings ++
     Seq(
       organization := buildOrganization,
       version      := buildVersion,
