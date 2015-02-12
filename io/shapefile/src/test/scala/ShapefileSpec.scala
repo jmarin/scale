@@ -4,12 +4,12 @@ import java.nio.file.FileSystems
 import geometry.Envelope
 import org.specs2.mutable.Specification
 
-class ShapefileHeaderSpec extends Specification {
+class ShapefileSpec extends Specification {
 
-  val pointShp = FileSystems.getDefault.getPath("io/src/test/resources", "Point.shp").toFile.getAbsolutePath
-  val pointDbf = FileSystems.getDefault.getPath("io/src/test/resources", "Point.dbf").toFile.getAbsolutePath
-  val lineShp = FileSystems.getDefault.getPath("io/src/test/resources", "Line.shp").toFile.getAbsolutePath
-  val polyShp = FileSystems.getDefault.getPath("io/src/test/resources", "Polygon.shp").toFile.getAbsolutePath
+  val pointShp = FileSystems.getDefault.getPath("io/shapefile/src/test/resources", "Point.shp").toFile.getAbsolutePath
+  val pointDbf = FileSystems.getDefault.getPath("io/shapefile/src/test/resources", "Point.dbf").toFile.getAbsolutePath
+  val lineShp = FileSystems.getDefault.getPath("io/shapefile/src/test/resources", "Line.shp").toFile.getAbsolutePath
+  val polyShp = FileSystems.getDefault.getPath("io/shapefile/src/test/resources", "Polygon.shp").toFile.getAbsolutePath
 
   "A Shapefile" should {
     "Have the correct header" in {

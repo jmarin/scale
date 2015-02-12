@@ -1,4 +1,4 @@
-package geojson
+package io.geojson
 
 import com.vividsolutions.jts.{ geom => jts }
 import spray.json._

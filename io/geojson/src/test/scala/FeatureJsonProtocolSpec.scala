@@ -1,4 +1,4 @@
-package geojson
+package io.geojson
 
 import org.specs2.mutable.Specification
 import org.specs2.ScalaCheck
@@ -10,7 +10,7 @@ import spray.json._
 
 class FeatureJsonProtocolSpec extends Specification {
 
-  import geojson.FeatureJsonProtocol._
+  import io.geojson.FeatureJsonProtocol._
 
   val schema = Schema(
     Field("geometry", GeometryType()),
