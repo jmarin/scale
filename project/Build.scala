@@ -10,7 +10,6 @@ object BuildSettings {
 
   val buildSettings = Defaults.coreDefaultSettings ++ 
     scalariformSettings ++
-    org.scalastyle.sbt.ScalastylePlugin.Settings ++
     xerial.sbt.Sonatype.sonatypeSettings ++
     Seq(
       organization := buildOrganization,
