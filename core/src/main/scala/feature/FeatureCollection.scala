@@ -21,4 +21,13 @@ case class FeatureCollection(features: Traversable[Feature]) {
       l union r
     }
   }
+
+  def pointInPoly(p: Point): Option[Traversable[Feature]] = {
+    features.foreach { f =>
+      val geomType = f.geometry.geometryType
+      require(geomType == "Polygon" || geomType == "MultiPolygon")
+    }
+    val polys = features.filter(f => f.geometry.contains(p))
+    if (polys.size > 0) Some(polys) else None
+  }
 }
