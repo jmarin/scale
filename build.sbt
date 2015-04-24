@@ -1,23 +1,27 @@
-lazy val commonSettings = Defaults.coreDefaultSettings ++
-  scalariformSettings ++
-  Seq(
+val commonSettings =
+    scalariformSettings ++
+    Seq(
     organization := "com.github.jmarin",
     version := "0.0.3-SNAPSHOT",
     scalaVersion := "2.11.6"
   )
 
 
-val library = crossProject
-  .settings(commonSettings: _*)
+val scale = crossProject
+  .settings(commonSettings: _ *)
   .settings(
-  libraryDependencies += "com.lihaoyi" %%% "utest" % "0.3.0",
+  libraryDependencies ++= Seq(
+    "com.lihaoyi" %%% "utest" % "0.3.0",
+    "com.lihaoyi" %%% "upickle" % "0.2.8"),
   testFrameworks += new TestFramework("utest.runner.Framework")
 ).jsSettings(
     // JS-specific settings
+
   ).jvmSettings(
     // JVM-specific settings
+
   )
 
-lazy val js = library.js
+lazy val js = scale.js
 
-lazy val jvm = library.jvm
+lazy val jvm = scale.jvm

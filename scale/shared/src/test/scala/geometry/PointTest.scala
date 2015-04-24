@@ -2,7 +2,6 @@ package geometry
 
 import utest._
 
-
 object PointTest extends TestSuite{
   val tests = TestSuite {
     'round{

@@ -1,5 +1,19 @@
 package geometry
 
+import upickle._
+
+object Point {
+  implicit val pointWriter = upickle.Writer[Point]{
+    case p => Js.Str("POINT(" + p.x + " " + p.y + ")")
+  }
+
+
+  def apply(x: Double, y: Double): Point = {
+    Point(x, y, 0)
+  }
+}
+
+
 case class Point(x: Double, y: Double, z:Double) {
 
   private def roundAt(p: Int, n: Double): Double = {
@@ -13,6 +27,5 @@ case class Point(x: Double, y: Double, z:Double) {
     val zr = roundAt(s, z)
     Point(xr, yr, zr)
   }
-
 
 }
