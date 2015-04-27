@@ -27,10 +27,10 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
         "geometry" -> geometry,
         "properties" -> JsObject(
           values.keys
-            .filter((k: String) => k != "geometry")
-            .map { k =>
-              k.toString -> toJsValue(values.get(k))
-            }.toMap
+          .filter((k: String) => k != "geometry")
+          .map { k =>
+            k.toString -> toJsValue(values.get(k))
+          }.toMap
         )
       )
     }

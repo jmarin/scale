@@ -11,7 +11,8 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
     def write(p: Point): JsValue = {
       JsObject(
         "type" -> JsString("Point"),
-        "coordinates" -> JsArray(JsNumber(p.x), JsNumber(p.y), JsNumber(p.z)))
+        "coordinates" -> JsArray(JsNumber(p.x), JsNumber(p.y), JsNumber(p.z))
+      )
     }
 
     def read(json: JsValue): Point = {
@@ -167,12 +168,12 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
       "type" -> JsString(`type`),
       "coordinates" -> JsArray(
         geometries.map { g =>
-          JsArray(
-            g.getCoordinates.map { c =>
-              JsArray(JsNumber(c.x), JsNumber(c.y), JsNumber(c.z))
-            }.toVector
-          )
+        JsArray(
+          g.getCoordinates.map { c =>
+          JsArray(JsNumber(c.x), JsNumber(c.y), JsNumber(c.z))
         }.toVector
+        )
+      }.toVector
       )
     )
   }
@@ -183,12 +184,12 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
       "coordinates" -> JsArray(
         JsArray(
           geometries.map { g =>
-            JsArray(
-              g.getCoordinates.map { c =>
-                JsArray(JsNumber(c.x), JsNumber(c.y), JsNumber(c.z))
-              }.toVector
-            )
+          JsArray(
+            g.getCoordinates.map { c =>
+            JsArray(JsNumber(c.x), JsNumber(c.y), JsNumber(c.z))
           }.toVector
+          )
+        }.toVector
         )
       )
     )

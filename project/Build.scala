@@ -15,7 +15,7 @@ object BuildSettings {
       organization := buildOrganization,
       version      := buildVersion,
       scalaVersion := buildScalaVersion,
-      scalacOptions ++= Seq("-deprecation","-unchecked","-feature"),
+      scalacOptions ++= Seq("-Xlint", "-deprecation","-unchecked","-feature"),
       publishMavenStyle := true,
       publishArtifact in Test := false,
       publishTo := {
