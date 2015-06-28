@@ -11,7 +11,7 @@ val scale = crossProject
   .settings(commonSettings: _ *)
   .settings(
   libraryDependencies ++= Seq(
-    "com.lihaoyi" %%% "utest" % "0.3.0",
+    "com.lihaoyi" %%% "utest" % "0.3.1" % "test",
     "com.lihaoyi" %%% "upickle" % "0.2.8"),
   testFrameworks += new TestFramework("utest.runner.Framework")
 ).jsSettings(
