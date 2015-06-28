@@ -1,27 +1,30 @@
-val commonSettings =
-    scalariformSettings ++
-    Seq(
-    organization := "com.github.jmarin",
-    version := "0.0.3-SNAPSHOT",
-    scalaVersion := "2.11.6"
+name := "Scale root project"
+
+lazy val root = project.in(file(".")).
+  aggregate(scaleJS, scaleJVM).
+  settings(
+    publish := {},
+    publishLocal := {}
   )
 
-
-val scale = crossProject
-  .settings(commonSettings: _ *)
-  .settings(
-  libraryDependencies ++= Seq(
+lazy val scale = crossProject.in(file("scale")).
+  settings(
+    name := "scale",
+    version := "0.0.3-SNAPSHOT",
+    scalaVersion := "2.11.6",
+    libraryDependencies ++= Seq(
     "com.lihaoyi" %%% "utest" % "0.3.1" % "test",
     "com.lihaoyi" %%% "upickle" % "0.2.8"),
-  testFrameworks += new TestFramework("utest.runner.Framework")
-).jsSettings(
-    // JS-specific settings
-
-  ).jvmSettings(
-    // JVM-specific settings
-
+    testFrameworks += new TestFramework("utest.runner.Framework")
+  ).
+  jvmSettings(
+    // Add JVM-specific settings here
+    name := "scaleJVM"
+  ).
+  jsSettings(
+    // Add JS-specific settings here
+    name := "scaleJS"
   )
 
-lazy val js = scale.js
-
-lazy val jvm = scale.jvm
+lazy val scaleJVM = scale.jvm
+lazy val scaleJS = scale.js
