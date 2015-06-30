@@ -11,13 +11,12 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
     def write(p: Point): JsValue = {
       JsObject(
         "type" -> JsString("Point"),
-        "coordinates" -> JsArray(JsNumber(p.x), JsNumber(p.y), JsNumber(p.z)))
+        "coordinates" -> JsArray(JsNumber(p.x), JsNumber(p.y))
+      )
     }
 
     def read(json: JsValue): Point = {
       json.asJsObject.getFields("type", "coordinates") match {
-        case Seq(JsString("Point"), JsArray(Vector(JsNumber(x), JsNumber(y), JsNumber(z)))) =>
-          Point(x.toDouble, y.toDouble, z.toDouble)
         case Seq(JsString("Point"), JsArray(Vector(JsNumber(x), JsNumber(y)))) =>
           Point(x.toDouble, y.toDouble)
         case _ => throw new DeserializationException("Point GeoJSON expected")
@@ -45,7 +44,7 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
       val pext = p.boundary.points
       val holes = p.holes
       val ptsExt = pext.map { k =>
-        JsArray(JsNumber(k.x), JsNumber(k.y), JsNumber(k.z))
+        JsArray(JsNumber(k.x), JsNumber(k.y))
       }
       p.jtsGeometry.getNumInteriorRing match {
         case 0 =>
@@ -154,7 +153,7 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
 
   private def toCoords(points: Vector[Point], `type`: String): JsValue = {
     val coords = points.map { p =>
-      JsArray(JsNumber(p.x), JsNumber(p.y), JsNumber(p.z))
+      JsArray(JsNumber(p.x), JsNumber(p.y))
     }.toVector
     JsObject(
       "type" -> JsString(`type`),
@@ -169,7 +168,7 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
         geometries.map { g =>
           JsArray(
             g.getCoordinates.map { c =>
-              JsArray(JsNumber(c.x), JsNumber(c.y), JsNumber(c.z))
+              JsArray(JsNumber(c.x), JsNumber(c.y))
             }.toVector
           )
         }.toVector
@@ -185,7 +184,7 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
           geometries.map { g =>
             JsArray(
               g.getCoordinates.map { c =>
-                JsArray(JsNumber(c.x), JsNumber(c.y), JsNumber(c.z))
+                JsArray(JsNumber(c.x), JsNumber(c.y))
               }.toVector
             )
           }.toVector

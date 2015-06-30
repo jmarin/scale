@@ -16,8 +16,7 @@ trait GeometryGenerators {
     for {
       x <- Gen.choose(-180.0, 180.0)
       y <- Gen.choose(-90.0, 90.0)
-      z <- Arbitrary.arbitrary[Double]
-    } yield Point(x, y, z)
+    } yield Point(x, y)
   }
 
   def pointList: Gen[List[Point]] = {

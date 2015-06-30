@@ -5,18 +5,17 @@ import sbtprotobuf.{ProtobufPlugin=>PB}
 
 object BuildSettings {
   val buildOrganization = "com.github.jmarin"
-  val buildVersion = "0.0.1"
+  val buildVersion = "0.0.2"
   val buildScalaVersion = "2.11.5"
 
   val buildSettings = Defaults.coreDefaultSettings ++ 
     scalariformSettings ++
-    org.scalastyle.sbt.ScalastylePlugin.Settings ++
     xerial.sbt.Sonatype.sonatypeSettings ++
     Seq(
       organization := buildOrganization,
       version      := buildVersion,
       scalaVersion := buildScalaVersion,
-      scalacOptions ++= Seq("-deprecation","-unchecked","-feature"),
+      scalacOptions ++= Seq("-Xlint", "-deprecation","-unchecked","-feature"),
       publishMavenStyle := true,
       publishArtifact in Test := false,
       publishTo := {

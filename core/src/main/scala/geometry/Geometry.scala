@@ -58,7 +58,7 @@ trait Geometry {
 
   def coordinates: Array[jts.Coordinate] = jtsGeometry.getCoordinates
 
-  def points: Array[Point] = coordinates.map(c => Point(c.x, c.y, c.z))
+  def points: Array[Point] = coordinates.map(c => Point(c.x, c.y))
 
   def intersection(that: Geometry): Geometry = {
     val result = jtsGeometry.intersection(that.jtsGeometry)

@@ -35,7 +35,6 @@ class PointSpec extends Specification with ScalaCheck with GeometryGenerators {
       val p = Point(-77, 39)
       p.x must be equalTo (-77.0)
       p.y must be equalTo (39.0)
-      p.z must be equalTo (0)
     }
     "intersect with itself" ! intersectSelf
     "not intersect with other point" ! intersectOther

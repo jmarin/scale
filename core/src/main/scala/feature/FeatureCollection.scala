@@ -4,6 +4,9 @@ import com.vividsolutions.jts.{ geom => jts }
 import geometry._
 import feature._
 
+import java.util.Calendar
+import com.vividsolutions.jts.index.strtree.STRtree
+
 object FeatureCollection {
 
   def apply(features: Feature*): FeatureCollection = {
@@ -21,4 +24,11 @@ case class FeatureCollection(features: Traversable[Feature]) {
       l union r
     }
   }
+
+  def pointInPoly(p: Point): Option[Traversable[Feature]] = {
+    val rtree = RTree(features)
+    val polys = rtree.query(p.envelope)
+    if (polys.size > 0) Some(polys) else None
+  }
+
 }

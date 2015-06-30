@@ -37,6 +37,13 @@ class FeatureCollectionSpec extends Specification {
       val env = fc.envelope
       env must be equalTo (polygon.envelope)
     }
+    "do point in poly search" in {
+      val polys = fc.pointInPoly(polygon.centroid).getOrElse(Nil)
+      polys.head must be equalTo (fp)
+      val empty = fc.pointInPoly(Point(0, 0)).getOrElse(Nil)
+      empty must be equalTo (None)
+    }
+
   }
 
 }

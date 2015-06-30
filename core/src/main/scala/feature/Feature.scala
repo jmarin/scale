@@ -125,7 +125,8 @@ case class Feature(srid: Int, schema: Schema, values: Map[String, Any]) {
   private def projectPolygon(transform: CoordinateTransform, polygon: Polygon): Polygon = {
     val gf = polygon.jtsGeometry.getFactory
     val exterior = gf.createLinearRing(
-      projectCoordinates(transform, polygon.jtsGeometry.getExteriorRing.getCoordinates))
+      projectCoordinates(transform, polygon.jtsGeometry.getExteriorRing.getCoordinates)
+    )
     val holes = polygon.holes.map { h =>
       h.jtsGeometry.asInstanceOf[jts.LinearRing]
     }
