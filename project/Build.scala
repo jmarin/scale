@@ -5,7 +5,7 @@ import sbtprotobuf.{ProtobufPlugin=>PB}
 
 object BuildSettings {
   val buildOrganization = "com.github.jmarin"
-  val buildVersion = "0.0.2-SNAPSHOT"
+  val buildVersion = "0.0.3-SNAPSHOT"
   val buildScalaVersion = "2.11.5"
 
   val buildSettings = Defaults.coreDefaultSettings ++ 
