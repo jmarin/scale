@@ -23,8 +23,7 @@ lazy val scale = crossProject.in(file("scale")).
   ).
   jsSettings(
     // Add JS-specific settings here
-    name := "scaleJS",
-    scalaJSStage in Global := FastOptStage
+    name := "scaleJS"
   )
 
 lazy val scaleJVM = scale.jvm

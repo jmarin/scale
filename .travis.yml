@@ -5,7 +5,6 @@ scala:
 jdk:
 - oraclejdk8
 - oraclejdk7
-node_js: '0.10'
 script: "sbt clean coverage test && sbt coverageAggregate"
 after_success: "sbt coveralls"
 env:
