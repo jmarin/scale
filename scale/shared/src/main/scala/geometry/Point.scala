@@ -8,7 +8,7 @@ object Point {
     case p =>
       Js.Obj(
         ("type", Js.Str("Point")),
-        ("coordinates", Js.Arr(Js.Num(p.x), Js.Num(p.y), Js.Num(p.z)))
+        ("coordinates", Js.Arr(Js.Num(p.x), Js.Num(p.y)))
       )
   }
   
@@ -18,20 +18,15 @@ object Point {
       coordinates match {
         case cs: Js.Arr =>
           val c = cs.value.map (x => x.value.asInstanceOf[Double])
-          Point(c(0), c(1), c(2))
+          Point(c(0), c(1))
         case _ =>
           Point(0, 0)
       }
   } 
 
-  def apply(x: Double, y: Double): Point = {
-    Point(x, y, 0)
-  }
-
 }
 
-
-case class Point(x: Double, y: Double, z:Double) {
+case class Point(x: Double, y: Double) {
 
   private def roundAt(p: Int, n: Double): Double = {
     val s = math.pow(10, p)
@@ -41,8 +36,7 @@ case class Point(x: Double, y: Double, z:Double) {
   def roundCoordinates(s: Int): Point = {
     val xr = roundAt(s, x)
     val yr = roundAt(s, y)
-    val zr = roundAt(s, z)
-    Point(xr, yr, zr)
+    Point(xr, yr)
   }
 
 }
