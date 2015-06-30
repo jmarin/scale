@@ -32,13 +32,13 @@ class GeometryJsonProtocolSpec extends Specification {
   val exterior = Line(ph1, ph2, ph3, ph4, ph1)
   val hole = Line(h1, h2, h3, h1)
   val polyWithHole = Polygon(exterior, hole)
-  val pointJson = """{"type":"Point","coordinates":[-77.1,38.5,0.0]}"""
-  val lineJson = """{"type":"LineString","coordinates":[[-77.1,38.5,0.0],[-102.2,45.8,0.0]]}"""
-  val polyJson = """{"type":"Polygon","coordinates":[[[-77.1,38.5,0.0],[-102.2,45.8,0.0],[-85.1,39.1,0.0],[-77.1,38.5,0.0]]]}"""
-  val polyWithHoleJson = """{"type":"Polygon","coordinates":[[[100.0,0.0,0.0],[101.0,0.0,0.0],[101.0,1.0,0.0],[100.0,1.0,0.0],[100.0,0.0,0.0]],[[100.2,0.2,0.0],[100.8,0.2,0.0],[100.8,0.8,0.0],[100.2,0.2,0.0]]]}"""
-  val mpJson = """{"type":"MultiPoint","coordinates":[[-77.1,38.5,0.0],[-102.2,45.8,0.0]]}"""
-  val mlJson = """{"type":"MultiLineString","coordinates":[[[-77.1,38.5,0.0],[-102.2,45.8,0.0]],[[-102.2,45.8,0.0],[-85.1,39.1,0.0]]]}"""
-  val mpolyJson = """{"type":"MultiPolygon","coordinates":[[[[-77.1,38.5,0.0],[-102.2,45.8,0.0],[-85.1,39.1,0.0],[-77.1,38.5,0.0]],[[-78.0,32.0,0.0],[-77.0,32.0,0.0],[-76.0,35.0,0.0],[-78.0,32.0,0.0]]]]}"""
+  val pointJson = """{"type":"Point","coordinates":[-77.1,38.5]}"""
+  val lineJson = """{"type":"LineString","coordinates":[[-77.1,38.5],[-102.2,45.8]]}"""
+  val polyJson = """{"type":"Polygon","coordinates":[[[-77.1,38.5],[-102.2,45.8],[-85.1,39.1],[-77.1,38.5]]]}"""
+  val polyWithHoleJson = """{"type":"Polygon","coordinates":[[[100.0,0.0],[101.0,0.0],[101.0,1.0],[100.0,1.0],[100.0,0.0]],[[100.2,0.2],[100.8,0.2],[100.8,0.8],[100.2,0.2]]]}"""
+  val mpJson = """{"type":"MultiPoint","coordinates":[[-77.1,38.5],[-102.2,45.8]]}"""
+  val mlJson = """{"type":"MultiLineString","coordinates":[[[-77.1,38.5],[-102.2,45.8]],[[-102.2,45.8],[-85.1,39.1]]]}"""
+  val mpolyJson = """{"type":"MultiPolygon","coordinates":[[[[-77.1,38.5],[-102.2,45.8],[-85.1,39.1],[-77.1,38.5]],[[-78.0,32.0],[-77.0,32.0],[-76.0,35.0],[-78.0,32.0]]]]}"""
 
   "The JSON protocol" should {
     "write Point to GeoJSON" in {

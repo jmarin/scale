@@ -7,7 +7,7 @@ object Util {
 
   def points2JTSCoordinates(points: Traversable[Point]): Traversable[Coordinate] = {
     points.map { point =>
-      new Coordinate(point.x, point.y, point.z)
+      new Coordinate(point.x, point.y)
     }
   }
 

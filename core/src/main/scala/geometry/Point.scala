@@ -20,15 +20,6 @@ object Point {
     Point(gf.createPoint(new jts.Coordinate(x, y, 0)))
   }
 
-  def apply(x: Double, y: Double, z: Double): Point = {
-    Point(geomFactory.createPoint(new jts.Coordinate(x, y, z)))
-  }
-
-  def apply(x: Double, y: Double, z: Double, srid: Int): Point = {
-    val gf = new jts.GeometryFactory(new PrecisionModel, srid)
-    Point(gf.createPoint(new jts.Coordinate(x, y, z)))
-  }
-
   implicit def jtsToPoint(jtsGeom: jts.Point): Point = {
     apply(jtsGeom)
   }
@@ -46,13 +37,10 @@ case class Point(jtsGeometry: jts.Point) extends Geometry {
 
   def y: Double = jtsGeometry.getY
 
-  def z: Double = jtsGeometry.getCoordinate.z
-
   def roundCoordinates(s: Int): Point = {
     val xr = roundAt(s, x)
     val yr = roundAt(s, y)
-    val zr = roundAt(s, z)
-    Point(xr, yr, zr)
+    Point(xr, yr)
   }
 
 }

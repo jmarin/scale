@@ -20,7 +20,7 @@ class FeatureJsonProtocolSpec extends Specification {
   val p1 = Point(-77, 39)
   val values = Map("geometry" -> p1, "Description" -> "First Point", "id" -> "0000-0000", "Value" -> 1.5)
   val f1 = Feature(schema, values)
-  val pJson = """{"type":"Feature","geometry":{"type":"Point","coordinates":[-77.0,39.0,0.0]},"properties":{"Description":"First Point","id":"0000-0000","Value":1.5}}"""
+  val pJson = """{"type":"Feature","geometry":{"type":"Point","coordinates":[-77.0,39.0]},"properties":{"Description":"First Point","id":"0000-0000","Value":1.5}}"""
 
   "The JSON protocol" should {
     "write feature to GeoJSON" in {

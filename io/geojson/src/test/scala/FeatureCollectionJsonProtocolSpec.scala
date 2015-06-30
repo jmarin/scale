@@ -27,7 +27,7 @@ class FeatureCollectionJsonProtocolSpec extends Specification {
   val fp = Feature(schema, values)
   val fph = Feature(schema, valuesWithHole)
   val fc = FeatureCollection(fp, fph)
-  val fcJson = """{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-77.0,39.0,0.0],[-76.0,40.0,0.0],[-75.0,38.0,0.0],[-77.0,39.0,0.0]]]},"properties":{"DESCRIPTION":"First Point"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-77.0,39.0,0.0],[-76.0,40.0,0.0],[-75.0,38.0,0.0],[-77.0,39.0,0.0]],[[-75.7,39.2,0.0],[-76.5,39.0,0.0],[-76.0,38.5,0.0],[-75.7,39.2,0.0]]]},"properties":{"DESCRIPTION":"First Point"}}]}"""
+  val fcJson = """{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-77.0,39.0],[-76.0,40.0],[-75.0,38.0],[-77.0,39.0]]]},"properties":{"DESCRIPTION":"First Point"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-77.0,39.0],[-76.0,40.0],[-75.0,38.0],[-77.0,39.0]],[[-75.7,39.2],[-76.5,39.0],[-76.0,38.5],[-75.7,39.2]]]},"properties":{"DESCRIPTION":"First Point"}}]}"""
 
   "A FeatureCollection" should {
     "write features to GeoJSON" in {
