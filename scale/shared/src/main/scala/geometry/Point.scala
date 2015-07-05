@@ -39,4 +39,8 @@ case class Point(x: Double, y: Double) {
     Point(xr, yr)
   }
 
+  override def toString: String = {
+    s"POINT(${x}, ${y})"
+  }
+
 }
