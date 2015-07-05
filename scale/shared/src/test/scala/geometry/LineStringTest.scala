@@ -26,6 +26,10 @@ object LineStringTest extends TestSuite {
       val reversed = LineString(Vector(p3, p2, p1))
       assert(line1.reverse == reversed)
     }
+    'isClosed {
+      assert(!line1.isClosed)
+      assert(closedLine.isClosed)
+    }
   }
 
 }
