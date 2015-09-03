@@ -23,6 +23,25 @@ class FeatureSpec extends Specification {
       val f = Feature(crs, schema, values)
       f.srid must be equalTo (4326)
     }
+
+    "be created from a geometry" in {
+      val p = Point(-77, 38)
+      val f = Feature(p)
+      f.geometry must be equalTo (p)
+    }
+
+    "be created from a geometry and map of values" in {
+      val p = Point(-77, 38)
+      val schema = Schema(List(
+        Field("geometry", GeometryType()),
+        Field("desc", StringType())
+      ))
+      val values = Map("geometry" -> p, "desc" -> "description")
+      val f = Feature(schema, values)
+      f.geometry must be equalTo (p)
+      f.get("desc").getOrElse("") must be equalTo ("description")
+    }
+
   }
 
 }
