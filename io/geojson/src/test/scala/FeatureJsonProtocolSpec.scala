@@ -16,7 +16,8 @@ class FeatureJsonProtocolSpec extends Specification {
     Field("geometry", GeometryType()),
     Field("Description", StringType()),
     Field("id", StringType()),
-    Field("Value", DoubleType()))
+    Field("Value", DoubleType())
+  )
   val p1 = Point(-77, 39)
   val values = Map("geometry" -> p1, "Description" -> "First Point", "id" -> "0000-0000", "Value" -> 1.5)
   val f1 = Feature(schema, values)

@@ -166,12 +166,12 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
       "type" -> JsString(`type`),
       "coordinates" -> JsArray(
         geometries.map { g =>
-          JsArray(
-            g.getCoordinates.map { c =>
-              JsArray(JsNumber(c.x), JsNumber(c.y))
-            }.toVector
-          )
+        JsArray(
+          g.getCoordinates.map { c =>
+          JsArray(JsNumber(c.x), JsNumber(c.y))
         }.toVector
+        )
+      }.toVector
       )
     )
   }
@@ -182,12 +182,12 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
       "coordinates" -> JsArray(
         JsArray(
           geometries.map { g =>
-            JsArray(
-              g.getCoordinates.map { c =>
-                JsArray(JsNumber(c.x), JsNumber(c.y))
-              }.toVector
-            )
+          JsArray(
+            g.getCoordinates.map { c =>
+            JsArray(JsNumber(c.x), JsNumber(c.y))
           }.toVector
+          )
+        }.toVector
         )
       )
     )
