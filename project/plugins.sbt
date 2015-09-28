@@ -9,6 +9,9 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "0.7.1")
 
 addSbtPlugin("com.github.gseitz" % "sbt-protobuf" % "0.3.3")
 
+//Scalaxb plugin
+addSbtPlugin("org.scalaxb" % "sbt-scalaxb" % "1.4.0")
+
 // Plugins for publishing
 
 resolvers += Resolver.url(

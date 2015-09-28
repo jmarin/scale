@@ -2,11 +2,13 @@ import sbt._
 import Keys._
 import com.typesafe.sbt.SbtScalariform._
 import sbtprotobuf.{ProtobufPlugin=>PB}
+import sbtscalaxb.Plugin._
+import ScalaxbKeys._
 
 object BuildSettings {
   val buildOrganization = "com.github.jmarin"
   val buildVersion = "0.0.3-SNAPSHOT"
-  val buildScalaVersion = "2.11.5"
+  val buildScalaVersion = "2.11.7"
 
   val buildSettings = Defaults.coreDefaultSettings ++ 
     scalariformSettings ++
@@ -61,6 +63,8 @@ object Dependencies {
   val proj4jVersion = "0.1.0"
   val sprayJsonVersion = "1.3.0"
   val dbfVersion = "0.4.0"
+  val parserVersion = "1.0.4"
+  val xmlVersion = "1.0.5"
 
   val specs2 = "org.specs2" %% "specs2" % specs2Version % "test" 
   val scalacheck = "org.scalacheck" %% "scalacheck" % scalacheckVersion % "test"
@@ -69,6 +73,8 @@ object Dependencies {
   val sprayJson = "io.spray" %% "spray-json" % sprayJsonVersion
 
   val dbf = "com.linuxense" % "javadbf" % dbfVersion
+  val scalaXml = "org.scala-lang.modules" %% "scala-xml" % xmlVersion
+  val scalaParser = "org.scala-lang.modules" %% "scala-parser-combinators" % parserVersion
 }
 
 object ScaleBuild extends Build {
@@ -83,6 +89,7 @@ object ScaleBuild extends Build {
   val serializeDeps = coreDeps ++ Seq(sprayJson)
   val shpDeps = coreDeps ++ Seq(dbf)
   val geojsonDeps = coreDeps ++ Seq(sprayJson)
+  val gpxDeps = coreDeps ++ Seq(scalaXml, scalaParser)
 
   lazy val scale = Project(
     "scale",
@@ -107,6 +114,18 @@ object ScaleBuild extends Build {
     "scale-geojson",
     file("io/geojson"),
     settings = buildSettings ++ Seq(libraryDependencies ++= geojsonDeps)
+  ).dependsOn(core)
+
+  lazy val gpx = Project(
+    "scale-gpx",
+    file("io/gpx"),
+    settings = buildSettings ++ scalaxbSettings ++ Seq(
+      sourceGenerators in Compile += (scalaxb in Compile).taskValue,
+      dispatchVersion in (Compile, scalaxb) := "0.11.1",
+      async in (Compile, scalaxb)           := true,
+      packageName in (Compile, scalaxb)     := "gpx.model",
+      libraryDependencies ++= gpxDeps
+    )
   ).dependsOn(core)
 
 }
