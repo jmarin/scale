@@ -1,9 +1,9 @@
-import sbt._
-import Keys._
 import com.typesafe.sbt.SbtScalariform._
-import sbtprotobuf.{ProtobufPlugin=>PB}
+import sbt.Keys._
+import sbt._
+import sbtprotobuf.{ProtobufPlugin => PB}
+import sbtscalaxb.Plugin.ScalaxbKeys._
 import sbtscalaxb.Plugin._
-import ScalaxbKeys._
 
 object BuildSettings {
   val buildOrganization = "com.github.jmarin"
@@ -78,9 +78,9 @@ object Dependencies {
 }
 
 object ScaleBuild extends Build {
-  import Resolvers._
-  import Dependencies._
   import BuildSettings._
+  import Dependencies._
+  import Resolvers._
 
   val commonDeps = Seq(specs2, scalacheck)
 
@@ -123,7 +123,10 @@ object ScaleBuild extends Build {
       sourceGenerators in Compile += (scalaxb in Compile).taskValue,
       dispatchVersion in (Compile, scalaxb) := "0.11.1",
       async in (Compile, scalaxb)           := true,
-      packageName in (Compile, scalaxb)     := "gpx.model",
+      packageNames in (Compile, scalaxb)     := Map(
+        uri("http://www.topografix.com/GPX/1/1") -> "gpx.model",
+        uri("http://www.garmin.com/xmlschemas/GpxExtensions/v3") -> "gpx.model.extensions.garmin",
+        uri("http://www.garmin.com/xmlschemas/TrackPointExtension/v1") -> "gpx.model.extensions.garmin"),
       libraryDependencies ++= gpxDeps
     )
   ).dependsOn(core)
