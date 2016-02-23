@@ -3,4 +3,4 @@ scale
 
 A modern geospatial stack for the JVM
 
-[![Build Status](https://travis-ci.org/jmarin/scale.svg)](https://travis-ci.org/jmarin/scale) [![Coverage Status](https://img.shields.io/coveralls/jmarin/scale.svg)](https://coveralls.io/r/jmarin/scale)
+[![Build Status](https://travis-ci.org/jmarin/scale.svg)](https://travis-ci.org/jmarin/scale) [![codecov.io](https://codecov.io/github/jmarin/scale.svg?branch=master)](https://codecov.io/github/jmarin/scale?branch=master)
