@@ -2,7 +2,6 @@ package feature
 
 import scala.collection._
 import scala.collection.generic._
-import scala.language.higherKinds
 
 class MyColl[A](seq: A*)
     extends Traversable[A]

@@ -2,7 +2,6 @@ package geometry
 
 import scala.language.implicitConversions
 import com.vividsolutions.jts.{geom => jts}
-import jts.GeometryFactory
 
 object Polygon {
 

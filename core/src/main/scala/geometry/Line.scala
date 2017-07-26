@@ -2,9 +2,7 @@ package geometry
 
 import scala.language.implicitConversions
 import com.vividsolutions.jts.{geom => jts}
-import jts.GeometryFactory
 import jts.LineString
-import jts.impl.CoordinateArraySequence
 import jts.PrecisionModel
 
 object Line {

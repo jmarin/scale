@@ -1,13 +1,7 @@
 package layer
 
 import feature._
-import org.osgeo.proj4j.{
-  CRSFactory,
-  CoordinateReferenceSystem,
-  CoordinateTransformFactory,
-  CoordinateTransform,
-  ProjCoordinate
-}
+import org.osgeo.proj4j.{CRSFactory, CoordinateReferenceSystem}
 
 object FeatureLayer {
 

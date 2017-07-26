@@ -1,8 +1,6 @@
 package geometry
 
-import collection.JavaConversions._
 import com.vividsolutions.jts.index.strtree.STRtree
-import com.vividsolutions.{jts => jts}
 import feature.Feature
 
 object RTree {
@@ -22,7 +20,7 @@ case class RTree(jtsRTree: STRtree) {
 
   def query(envelope: Envelope): Traversable[Feature] = {
     val e = envelope.jtsEnvelope
-    jtsRTree.query(e).toTraversable.asInstanceOf[Traversable[Feature]]
+    jtsRTree.query(e).asInstanceOf[Traversable[Feature]]
   }
 
 }
