@@ -15,4 +15,3 @@ case class PolyLineM(value: Int = 23) extends ShapeType
 case class PolygonM(value: Int = 25) extends ShapeType
 case class MultiPointM(value: Int = 28) extends ShapeType
 case class MultiPatch(value: Int = 31) extends ShapeType
-

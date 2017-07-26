@@ -17,4 +17,3 @@ object GeoJsonReader {
 }
 
 case class GeoJsonReader(fc: FeatureCollection)
-

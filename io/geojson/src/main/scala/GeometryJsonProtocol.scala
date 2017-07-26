@@ -1,6 +1,6 @@
 package io.geojson
 
-import com.vividsolutions.jts.{ geom => jts }
+import com.vividsolutions.jts.{geom => jts}
 import spray.json._
 import geometry._
 import feature._
@@ -17,7 +17,8 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
 
     def read(json: JsValue): Point = {
       json.asJsObject.getFields("type", "coordinates") match {
-        case Seq(JsString("Point"), JsArray(Vector(JsNumber(x), JsNumber(y)))) =>
+        case Seq(JsString("Point"),
+                 JsArray(Vector(JsNumber(x), JsNumber(y)))) =>
           Point(x.toDouble, y.toDouble)
         case _ => throw new DeserializationException("Point GeoJSON expected")
       }
@@ -34,7 +35,8 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
         case Seq(JsString("LineString"), JsArray(p)) =>
           val points = toPoints(p)
           Line(points)
-        case _ => throw new DeserializationException("LineString GeoJSON expected")
+        case _ =>
+          throw new DeserializationException("LineString GeoJSON expected")
       }
     }
   }
@@ -65,7 +67,8 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
         case Seq(JsString("Polygon"), JsArray(p)) =>
           val lines = toLines(p).toList
           Polygon(lines.head, lines.tail.toArray)
-        case _ => throw new DeserializationException("Polygon GeoJSON expected")
+        case _ =>
+          throw new DeserializationException("Polygon GeoJSON expected")
       }
     }
   }
@@ -79,7 +82,8 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
         case Seq(JsString("MultiPoint"), JsArray(p)) =>
           val points = toPoints(p)
           MultiPoint(points)
-        case _ => throw new DeserializationException("MultiPoint GeoJSON expected")
+        case _ =>
+          throw new DeserializationException("MultiPoint GeoJSON expected")
       }
     }
   }
@@ -94,7 +98,9 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
         case Seq(JsString("MultiLineString"), JsArray(l)) =>
           val lines = toLines(l)
           MultiLine(lines.toArray)
-        case _ => throw new DeserializationException("MultiLineString GeoJSON expected")
+        case _ =>
+          throw new DeserializationException(
+            "MultiLineString GeoJSON expected")
       }
     }
   }
@@ -109,7 +115,8 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
         case Seq(JsString("MultiPolygon"), JsArray(polys)) =>
           val polygons = toPolygons(polys)
           MultiPolygon(polygons.toArray)
-        case _ => throw new DeserializationException("MultiPolygon GeoJSON expected")
+        case _ =>
+          throw new DeserializationException("MultiPolygon GeoJSON expected")
       }
     }
   }
@@ -161,33 +168,35 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
     )
   }
 
-  private def toCoords(geometries: List[jts.Geometry], `type`: String): JsValue = {
+  private def toCoords(geometries: List[jts.Geometry],
+                       `type`: String): JsValue = {
     JsObject(
       "type" -> JsString(`type`),
       "coordinates" -> JsArray(
         geometries.map { g =>
-        JsArray(
-          g.getCoordinates.map { c =>
-          JsArray(JsNumber(c.x), JsNumber(c.y))
+          JsArray(
+            g.getCoordinates.map { c =>
+              JsArray(JsNumber(c.x), JsNumber(c.y))
+            }.toVector
+          )
         }.toVector
-        )
-      }.toVector
       )
     )
   }
 
-  private def toMultiCoords(geometries: List[jts.Geometry], `type`: String): JsValue = {
+  private def toMultiCoords(geometries: List[jts.Geometry],
+                            `type`: String): JsValue = {
     JsObject(
       "type" -> JsString(`type`),
       "coordinates" -> JsArray(
         JsArray(
           geometries.map { g =>
-          JsArray(
-            g.getCoordinates.map { c =>
-            JsArray(JsNumber(c.x), JsNumber(c.y))
+            JsArray(
+              g.getCoordinates.map { c =>
+                JsArray(JsNumber(c.x), JsNumber(c.y))
+              }.toVector
+            )
           }.toVector
-          )
-        }.toVector
         )
       )
     )

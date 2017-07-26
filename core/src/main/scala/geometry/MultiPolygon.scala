@@ -1,7 +1,7 @@
 package geometry
 
 import scala.language.implicitConversions
-import com.vividsolutions.jts.{ geom => jts }
+import com.vividsolutions.jts.{geom => jts}
 
 object MultiPolygon {
 
@@ -24,4 +24,5 @@ object MultiPolygon {
 
 }
 
-case class MultiPolygon(jtsGeometry: jts.MultiPolygon) extends GeometryCollection
+case class MultiPolygon(jtsGeometry: jts.MultiPolygon)
+    extends GeometryCollection

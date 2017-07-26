@@ -23,83 +23,88 @@ object ShapefileReader {
   }
 
   private def readPoints(bb: ByteBuffer): List[geometry.Point] = {
-    def loop(list: List[geometry.Point], n: Int): List[geometry.Point] = n match {
-      case 0 => list
-      case _ =>
-        val header = readRecordHeader(bb)
-        val shapeType = bb.getInt()
-        val x = bb.getDouble()
-        val y = bb.getDouble()
-        val point = geometry.Point(x, y)
-        loop(point :: list, bb.remaining)
-    }
+    def loop(list: List[geometry.Point], n: Int): List[geometry.Point] =
+      n match {
+        case 0 => list
+        case _ =>
+          val header = readRecordHeader(bb)
+          val shapeType = bb.getInt()
+          val x = bb.getDouble()
+          val y = bb.getDouble()
+          val point = geometry.Point(x, y)
+          loop(point :: list, bb.remaining)
+      }
     loop(Nil, bb.remaining)
   }
 
   private def readPolyLines(bb: ByteBuffer): List[geometry.Line] = {
-    def loop(list: List[geometry.Line], n: Int): List[geometry.Line] = n match {
-      case 0 => list
-      case _ => {
-        val header = readRecordHeader(bb)
-        val shapeType = bb.getInt()
-        val xmin = bb.getDouble()
-        val ymin = bb.getDouble()
-        val xmax = bb.getDouble()
-        val ymax = bb.getDouble()
-        val envelope = Envelope(xmin, ymin, xmax, ymax)
-        val numParts = bb.getInt()
-        val numPoints = bb.getInt()
-        for (i <- 1 to numParts) {
-          bb.getInt()
-        }
+    def loop(list: List[geometry.Line], n: Int): List[geometry.Line] =
+      n match {
+        case 0 => list
+        case _ => {
+          val header = readRecordHeader(bb)
+          val shapeType = bb.getInt()
+          val xmin = bb.getDouble()
+          val ymin = bb.getDouble()
+          val xmax = bb.getDouble()
+          val ymax = bb.getDouble()
+          val envelope = Envelope(xmin, ymin, xmax, ymax)
+          val numParts = bb.getInt()
+          val numPoints = bb.getInt()
+          for (i <- 1 to numParts) {
+            bb.getInt()
+          }
 
-        def loopPoints(points: List[geometry.Point], a: Int): List[geometry.Point] = a match {
-          case 0 => points
-          case _ =>
-            val x = bb.getDouble()
-            val y = bb.getDouble()
-            val point = geometry.Point(x, y)
-            loopPoints(point :: points, a - 1)
-        }
+          def loopPoints(points: List[geometry.Point],
+                         a: Int): List[geometry.Point] = a match {
+            case 0 => points
+            case _ =>
+              val x = bb.getDouble()
+              val y = bb.getDouble()
+              val point = geometry.Point(x, y)
+              loopPoints(point :: points, a - 1)
+          }
 
-        val points = loopPoints(Nil, numPoints)
-        val line = geometry.Line(points)
-        loop(line :: list, bb.remaining)
+          val points = loopPoints(Nil, numPoints)
+          val line = geometry.Line(points)
+          loop(line :: list, bb.remaining)
+        }
       }
-    }
     loop(Nil, bb.remaining)
   }
 
   private def readPolygons(bb: ByteBuffer): List[geometry.Polygon] = {
-    def loop(list: List[geometry.Polygon], n: Int): List[geometry.Polygon] = n match {
-      case 0 => list
-      case _ =>
-        val header = readRecordHeader(bb)
-        val shapeType = bb.getInt()
-        val xmin = bb.getDouble()
-        val ymin = bb.getDouble()
-        val xmax = bb.getDouble()
-        val ymax = bb.getDouble()
-        val envelope = Envelope(xmin, ymin, xmax, ymax)
-        val numParts = bb.getInt()
-        val numPoints = bb.getInt()
-        for (i <- 1 to numParts) {
-          bb.getInt()
-        }
+    def loop(list: List[geometry.Polygon], n: Int): List[geometry.Polygon] =
+      n match {
+        case 0 => list
+        case _ =>
+          val header = readRecordHeader(bb)
+          val shapeType = bb.getInt()
+          val xmin = bb.getDouble()
+          val ymin = bb.getDouble()
+          val xmax = bb.getDouble()
+          val ymax = bb.getDouble()
+          val envelope = Envelope(xmin, ymin, xmax, ymax)
+          val numParts = bb.getInt()
+          val numPoints = bb.getInt()
+          for (i <- 1 to numParts) {
+            bb.getInt()
+          }
 
-        def loopPoints(points: List[geometry.Point], a: Int): List[geometry.Point] = a match {
-          case 0 => points
-          case _ =>
-            val x = bb.getDouble()
-            val y = bb.getDouble()
-            val point = geometry.Point(x, y)
-            loopPoints(point :: points, a - 1)
-        }
+          def loopPoints(points: List[geometry.Point],
+                         a: Int): List[geometry.Point] = a match {
+            case 0 => points
+            case _ =>
+              val x = bb.getDouble()
+              val y = bb.getDouble()
+              val point = geometry.Point(x, y)
+              loopPoints(point :: points, a - 1)
+          }
 
-        val points = loopPoints(Nil, numPoints)
-        val polygon = geometry.Polygon(points)
-        loop(polygon :: list, bb.remaining)
-    }
+          val points = loopPoints(Nil, numPoints)
+          val polygon = geometry.Polygon(points)
+          loop(polygon :: list, bb.remaining)
+      }
     loop(Nil, bb.remaining)
   }
 
@@ -167,7 +172,8 @@ object ShapefileReader {
     }
   }
 
-  private def readRecords(dbfPath: String, schema: Schema): List[Map[String, Any]] = {
+  private def readRecords(dbfPath: String,
+                          schema: Schema): List[Map[String, Any]] = {
     val inputStream = new FileInputStream(dbfPath)
     try {
       val dbfReader = new DBFReader(inputStream)
@@ -182,7 +188,8 @@ object ShapefileReader {
       }
 
       val rows = loopRows(Nil, count)
-      val records = rows.map(row => rowToValues(row.asInstanceOf[Array[java.lang.Object]]))
+      val records =
+        rows.map(row => rowToValues(row.asInstanceOf[Array[java.lang.Object]]))
       val fields = readFields(dbfPath)
       records.map { record =>
         (fields.map(field => field.name) zip record).toMap
@@ -190,7 +197,8 @@ object ShapefileReader {
 
     } catch {
       case e: DBFException => throw new Exception(e)
-      case _: Throwable => throw new RuntimeException("An unknown error occured")
+      case _: Throwable =>
+        throw new RuntimeException("An unknown error occured")
     } finally {
       inputStream.close
     }
@@ -218,7 +226,8 @@ object ShapefileReader {
     val geometriesList = rawGeometries.map { geometry =>
       Map("geometry" -> geometry)
     }
-    require(geometriesList.size == records.size, ".shp and .dbf don't have the same number of records")
+    require(geometriesList.size == records.size,
+            ".shp and .dbf don't have the same number of records")
     val allValues = geometriesList zip records
     val values = allValues.map {
       case (geometries, values) => (geometries.toSeq ++ values.toSeq).toMap

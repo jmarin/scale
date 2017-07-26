@@ -1,6 +1,6 @@
 package feature
 
-import com.vividsolutions.jts.{ geom => jts }
+import com.vividsolutions.jts.{geom => jts}
 import org.osgeo.proj4j.{
   CRSFactory,
   CoordinateReferenceSystem,
@@ -32,7 +32,9 @@ object Feature {
     Feature(4326, schema, values)
   }
 
-  def apply(crs: CoordinateReferenceSystem, schema: Schema, values: Map[String, Any]): Feature = {
+  def apply(crs: CoordinateReferenceSystem,
+            schema: Schema,
+            values: Map[String, Any]): Feature = {
     val name = crs.getName
     val srid = name.split(":")(1).toInt
     Feature(srid, schema, values)
@@ -46,13 +48,16 @@ case class Feature(srid: Int, schema: Schema, values: Map[String, Any]) {
 
   lazy val crsFactory = new CRSFactory
 
-  lazy val crs: CoordinateReferenceSystem = crsFactory.createFromName(s"EPSG:$srid")
+  lazy val crs: CoordinateReferenceSystem =
+    crsFactory.createFromName(s"EPSG:$srid")
 
   def countFields: Int = values.size
 
-  def addOrUpdate(k: String, v: Any): Feature = Feature(srid, schema, values.updated(k, v))
+  def addOrUpdate(k: String, v: Any): Feature =
+    Feature(srid, schema, values.updated(k, v))
 
-  def updateGeometry(geom: Geometry) = Feature(srid, schema, values.updated("geometry", geom))
+  def updateGeometry(geom: Geometry) =
+    Feature(srid, schema, values.updated("geometry", geom))
 
   def get(k: String): Option[Any] = values.get(k)
 
@@ -84,28 +89,34 @@ case class Feature(srid: Int, schema: Schema, values: Map[String, Any]) {
     Feature(srid, schema, values.updated("geometry", projGeom))
   }
 
-  private def projectCoordinate(transform: CoordinateTransform, coord: jts.Coordinate): jts.Coordinate = {
+  private def projectCoordinate(transform: CoordinateTransform,
+                                coord: jts.Coordinate): jts.Coordinate = {
     val s = new ProjCoordinate(coord.x, coord.y)
     val t = new ProjCoordinate
     transform.transform(s, t)
     new jts.Coordinate(t.x, t.y)
   }
 
-  private def projectCoordinates(transform: CoordinateTransform, coords: Array[jts.Coordinate]): Array[jts.Coordinate] = {
+  private def projectCoordinates(
+      transform: CoordinateTransform,
+      coords: Array[jts.Coordinate]): Array[jts.Coordinate] = {
     coords.map(c => projectCoordinate(transform, c))
   }
 
-  private def projectPoint(transform: CoordinateTransform, point: Point): Point = {
+  private def projectPoint(transform: CoordinateTransform,
+                           point: Point): Point = {
     val c = point.jtsGeometry.getCoordinate
     val pc = projectCoordinate(transform, c)
     Point(pc.x, pc.y, srid(transform.getTargetCRS).toInt)
   }
 
-  private def projectPoints(transform: CoordinateTransform, points: Array[Point]): Array[Point] = {
+  private def projectPoints(transform: CoordinateTransform,
+                            points: Array[Point]): Array[Point] = {
     points.map(p => projectPoint(transform, p))
   }
 
-  def projectMultiPoint(transform: CoordinateTransform, multiPoint: MultiPoint): MultiPoint = {
+  def projectMultiPoint(transform: CoordinateTransform,
+                        multiPoint: MultiPoint): MultiPoint = {
     val pts = multiPoint.geometries.map(p => p.asInstanceOf[jts.Point])
     val points = pts.map(p => projectPoint(transform, p)).toArray
     MultiPoint(points)
@@ -116,16 +127,19 @@ case class Feature(srid: Int, schema: Schema, values: Map[String, Any]) {
     Line(points, srid(transform.getTargetCRS))
   }
 
-  private def projectMultiLine(transform: CoordinateTransform, multiLine: MultiLine): MultiLine = {
+  private def projectMultiLine(transform: CoordinateTransform,
+                               multiLine: MultiLine): MultiLine = {
     val lns = multiLine.geometries.map(l => l.asInstanceOf[jts.LineString])
     val lines = lns.map(l => projectLine(transform, Line(l))).toArray
     MultiLine(lines)
   }
 
-  private def projectPolygon(transform: CoordinateTransform, polygon: Polygon): Polygon = {
+  private def projectPolygon(transform: CoordinateTransform,
+                             polygon: Polygon): Polygon = {
     val gf = polygon.jtsGeometry.getFactory
     val exterior = gf.createLinearRing(
-      projectCoordinates(transform, polygon.jtsGeometry.getExteriorRing.getCoordinates)
+      projectCoordinates(transform,
+                         polygon.jtsGeometry.getExteriorRing.getCoordinates)
     )
     val holes = polygon.holes.map { h =>
       h.jtsGeometry.asInstanceOf[jts.LinearRing]
@@ -133,7 +147,8 @@ case class Feature(srid: Int, schema: Schema, values: Map[String, Any]) {
     Polygon(gf.createPolygon(exterior, holes))
   }
 
-  def projectMultiPolygon(transform: CoordinateTransform, multiPolygon: MultiPolygon): MultiPolygon = {
+  def projectMultiPolygon(transform: CoordinateTransform,
+                          multiPolygon: MultiPolygon): MultiPolygon = {
     val pls = multiPolygon.geometries.map(p => p.asInstanceOf[jts.Polygon])
     val polys = pls.map(p => projectPolygon(transform, Polygon(p))).toArray
     MultiPolygon(polys)

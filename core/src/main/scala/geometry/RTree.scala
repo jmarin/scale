@@ -2,7 +2,7 @@ package geometry
 
 import collection.JavaConversions._
 import com.vividsolutions.jts.index.strtree.STRtree
-import com.vividsolutions.{ jts => jts }
+import com.vividsolutions.{jts => jts}
 import feature.Feature
 
 object RTree {

@@ -1,11 +1,10 @@
 package io.geojson
 
-import org.specs2.mutable.Specification
 import geometry._
-import feature._
+import org.scalatest.{MustMatchers, WordSpec}
 import spray.json._
 
-class GeometryJsonProtocolSpec extends Specification {
+class GeometryJsonProtocolSpec extends WordSpec with MustMatchers {
 
   import io.geojson.GeometryJsonProtocol._
 
@@ -33,55 +32,61 @@ class GeometryJsonProtocolSpec extends Specification {
   val hole = Line(h1, h2, h3, h1)
   val polyWithHole = Polygon(exterior, hole)
   val pointJson = """{"type":"Point","coordinates":[-77.1,38.5]}"""
-  val lineJson = """{"type":"LineString","coordinates":[[-77.1,38.5],[-102.2,45.8]]}"""
-  val polyJson = """{"type":"Polygon","coordinates":[[[-77.1,38.5],[-102.2,45.8],[-85.1,39.1],[-77.1,38.5]]]}"""
-  val polyWithHoleJson = """{"type":"Polygon","coordinates":[[[100.0,0.0],[101.0,0.0],[101.0,1.0],[100.0,1.0],[100.0,0.0]],[[100.2,0.2],[100.8,0.2],[100.8,0.8],[100.2,0.2]]]}"""
-  val mpJson = """{"type":"MultiPoint","coordinates":[[-77.1,38.5],[-102.2,45.8]]}"""
-  val mlJson = """{"type":"MultiLineString","coordinates":[[[-77.1,38.5],[-102.2,45.8]],[[-102.2,45.8],[-85.1,39.1]]]}"""
-  val mpolyJson = """{"type":"MultiPolygon","coordinates":[[[[-77.1,38.5],[-102.2,45.8],[-85.1,39.1],[-77.1,38.5]],[[-78.0,32.0],[-77.0,32.0],[-76.0,35.0],[-78.0,32.0]]]]}"""
+  val lineJson =
+    """{"type":"LineString","coordinates":[[-77.1,38.5],[-102.2,45.8]]}"""
+  val polyJson =
+    """{"type":"Polygon","coordinates":[[[-77.1,38.5],[-102.2,45.8],[-85.1,39.1],[-77.1,38.5]]]}"""
+  val polyWithHoleJson =
+    """{"type":"Polygon","coordinates":[[[100.0,0.0],[101.0,0.0],[101.0,1.0],[100.0,1.0],[100.0,0.0]],[[100.2,0.2],[100.8,0.2],[100.8,0.8],[100.2,0.2]]]}"""
+  val mpJson =
+    """{"type":"MultiPoint","coordinates":[[-77.1,38.5],[-102.2,45.8]]}"""
+  val mlJson =
+    """{"type":"MultiLineString","coordinates":[[[-77.1,38.5],[-102.2,45.8]],[[-102.2,45.8],[-85.1,39.1]]]}"""
+  val mpolyJson =
+    """{"type":"MultiPolygon","coordinates":[[[[-77.1,38.5],[-102.2,45.8],[-85.1,39.1],[-77.1,38.5]],[[-78.0,32.0],[-77.0,32.0],[-76.0,35.0],[-78.0,32.0]]]]}"""
 
   "The JSON protocol" should {
     "write Point to GeoJSON" in {
-      p1.toJson.toString must be equalTo (pointJson)
+      p1.toJson.toString mustBe pointJson
     }
     "read GeoJSON into Point" in {
-      p1.toJson.convertTo[Point] must be equalTo (p1)
+      p1.toJson.convertTo[Point] mustBe p1
     }
     "write Line to GeoJSON" in {
-      l1.toJson.toString must be equalTo (lineJson)
+      l1.toJson.toString mustBe lineJson
     }
     "read GeoJSON into Line" in {
-      l1.toJson.convertTo[Line] must be equalTo (l1)
+      l1.toJson.convertTo[Line] mustBe (l1)
     }
     "write Polygon to GeoJSON" in {
-      poly1.toJson.toString must be equalTo (polyJson)
+      poly1.toJson.toString mustBe polyJson
     }
     "read GeoJSON into Polygon" in {
-      poly1.toJson.convertTo[Polygon] must be equalTo (poly1)
+      poly1.toJson.convertTo[Polygon] mustBe poly1
     }
     "write Polygon with hole" in {
-      polyWithHole.toJson.toString must be equalTo (polyWithHoleJson)
+      polyWithHole.toJson.toString mustBe polyWithHoleJson
     }
     "read GeoJSON into Polygon with hole" in {
-      polyWithHole.toJson.convertTo[Polygon] must be equalTo (polyWithHole)
+      polyWithHole.toJson.convertTo[Polygon] mustBe polyWithHole
     }
     "write MultiPoint to GeoJSON" in {
-      mp.toJson.toString must be equalTo (mpJson)
+      mp.toJson.toString mustBe mpJson
     }
     "read GeoJSON into MultiPoint" in {
-      mp.toJson.convertTo[MultiPoint] must be equalTo (mp)
+      mp.toJson.convertTo[MultiPoint] mustBe mp
     }
     "write MultiLine to GeoJSON" in {
-      ml.toJson.toString must be equalTo (mlJson)
+      ml.toJson.toString mustBe mlJson
     }
     "read GeoJSON into MultiLine" in {
-      ml.toJson.convertTo[MultiLine] must be equalTo (ml)
+      ml.toJson.convertTo[MultiLine] mustBe ml
     }
     "write MultiPolygon to GeoJSON" in {
-      mpoly.toJson.toString must be equalTo (mpolyJson)
+      mpoly.toJson.toString mustBe mpolyJson
     }
     "read GeoJSON into MultiPolygon" in {
-      mpoly.toJson.convertTo[MultiPolygon] must be equalTo (mpoly)
+      mpoly.toJson.convertTo[MultiPolygon] mustBe mpoly
     }
   }
 }

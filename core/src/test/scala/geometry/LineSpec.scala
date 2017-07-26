@@ -1,13 +1,13 @@
 package geometry
 
-import org.specs2.mutable.Specification
-import org.specs2.ScalaCheck
-import org.scalacheck.Prop
-import org.scalacheck.Prop.forAll
-import com.vividsolutions.jts.{ geom => jts }
+import org.scalatest.prop.PropertyChecks
+import org.scalatest.{MustMatchers, PropSpec}
 
-class LineSpec extends Specification with ScalaCheck with GeometryGenerators {
-
+class LineSpec
+    extends PropSpec
+    with PropertyChecks
+    with MustMatchers
+    with GeometryGenerators {
   val p1 = Point(-77, 39)
   val p2 = Point(-76, 40)
   val p3 = Point(-75, 38)
@@ -16,74 +16,71 @@ class LineSpec extends Specification with ScalaCheck with GeometryGenerators {
   val line = Line(Array(p1, p2, p3))
   val closedLine = Line(Array(p1, p2, p3, p4))
 
-  def hasPoints = Prop.forAll(lines) { (l: Line) =>
-    l.numPoints must be greaterThan (2)
-  }
-
-  def endPoints = Prop.forAll(lines) { (l: Line) =>
-    val p1 = l.points(0)
-    val p2 = l.points(l.points.size - 1)
-    l.startPoint must be equalTo (p1)
-    l.endPoint must be equalTo (p2)
-  }
-
-  def hasPositiveLength = Prop.forAll(lines) { (l: Line) =>
-    l.length must be greaterThanOrEqualTo (0)
-  }
-
-  def isClosed = Prop.forAll(closedLines) { (l: Line) =>
-    l.isClosed must beTrue
-  }
-
-  def reverse = Prop.forAll(lines) { (l: Line) =>
-    l.reverse.startPoint must be equalTo (l.endPoint)
-    l.reverse.endPoint must be equalTo (l.startPoint)
-    round(l.reverse.length) must be equalTo (round(l.length))
-    l.reverse.isValid must beTrue
-  }
-
-  def isCoordinate = Prop.forAll(lines) { (l: Line) =>
-    val p = l.startPoint
-    l.isCoordinate(p) must beTrue
-    l.isCoordinate(Point(1000, 1000)) must beFalse
-  }
-
-  "A Line" should {
-
-    "be valid" in {
-      line.isValid must beTrue
-      line.isSimple must beTrue
+  property("A Line always has some points") {
+    forAll(lines) { l =>
+      l.numPoints must be > 2
     }
+  }
 
-    "always have some points" ! hasPoints
-
-    "have a start and end point" ! endPoints
-
-    "have a positive length" ! hasPositiveLength
-
-    "report if it is a ring" in {
-      line.isClosed must beFalse
-      closedLine.isClosed must beTrue
+  property("A Line always has endpoints") {
+    forAll(lines) { l =>
+      val p1 = l.points(0)
+      val p2 = l.points(l.points.length - 1)
+      l.startPoint mustBe p1
+      l.endPoint mustBe p2
     }
+  }
 
-    "determine if it is closed" ! isClosed
-
-    "compute the reverse" ! reverse
-
-    "get nth point" in {
-      line.pointAt(2) must be equalTo (p3)
+  property("A Line has positive length") {
+    forAll(closedLines) { l =>
+      l.length.toLong must be >= 0L
     }
+  }
 
-    "check if point is coordinate on line" ! isCoordinate
-
-    "Serialize to WKT" in {
-      line.wkt must be equalTo ("LINESTRING (-77 39, -76 40, -75 38)")
+  property("A line is always closed") {
+    forAll(closedLines) { l =>
+      l.isClosed mustBe true
     }
+  }
 
-    "Extract points at certain distances (Linear Referencing)" in {
-      line.pointAtDist(0.6) must be equalTo (Point(-76.57573593128807, 39.42426406871193))
-      line.pointAtDist(-0.6) must be equalTo (Point(-75.26832815729998, 38.53665631459995))
+  property("The reverse of a Line must be valid") {
+    forAll(lines) { (l: Line) =>
+      l.reverse.startPoint mustBe l.endPoint
+      l.reverse.endPoint mustBe l.startPoint
+      round(l.reverse.length) mustBe round(l.length)
+      l.reverse.isValid mustBe true
     }
+  }
+
+  property("Check if a point is a vertex of a line") {
+    forAll(lines) { (l: Line) =>
+      val p = l.startPoint
+      l.isCoordinate(p) mustBe true
+      l.isCoordinate(Point(1000, 1000)) mustBe false
+    }
+  }
+
+  property("A Line must be valid") {
+    line.isValid mustBe true
+    line.isSimple mustBe true
+  }
+
+  property("A Line must report if it is a ring") {
+    line.isClosed mustBe false
+    closedLine.isClosed mustBe true
+  }
+
+  property("A Line must get the nth point") {
+    line.pointAt(2) mustBe p3
+  }
+
+  property("A Line must serialize to WKT") {
+    line.wkt mustBe "LINESTRING (-77 39, -76 40, -75 38)"
+  }
+
+  property("Linear referencing (extract points at certain distances") {
+    line.pointAtDist(0.6) mustBe Point(-76.57573593128807, 39.42426406871193)
+    line.pointAtDist(-0.6) mustBe Point(-75.26832815729998, 38.53665631459995)
   }
 
 }

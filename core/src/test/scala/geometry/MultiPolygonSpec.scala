@@ -1,8 +1,8 @@
 package geometry
 
-import org.specs2.mutable.Specification
+import org.scalatest.{MustMatchers, WordSpec}
 
-class MultiPolygonSpec extends Specification {
+class MultiPolygonSpec extends WordSpec with MustMatchers {
 
   val p1 = Point(-77, 39)
   val p2 = Point(-76, 40)
@@ -16,12 +16,12 @@ class MultiPolygonSpec extends Specification {
   val polygon2 = Polygon(p6, p7, p8, p6)
   val mp = MultiPolygon(polygon1, polygon2)
 
-  "A MultiPolygon" should {
+  "A MultiPolygon" must {
     "be valid" in {
-      mp.isValid must beTrue
+      mp.isValid mustBe true
     }
     "have a number of Polygons" in {
-      mp.numGeometries must be equalTo (2)
+      mp.numGeometries mustBe 2
     }
   }
 

@@ -1,7 +1,7 @@
 package geometry
 
 import scala.language.implicitConversions
-import com.vividsolutions.jts.{ geom => jts }
+import com.vividsolutions.jts.{geom => jts}
 
 object MultiLine {
 
@@ -32,7 +32,8 @@ object MultiLine {
 
 }
 
-case class MultiLine(jtsGeometry: jts.MultiLineString) extends GeometryCollection {
+case class MultiLine(jtsGeometry: jts.MultiLineString)
+    extends GeometryCollection {
 
   def reverse: MultiLine = {
     MultiLine(jtsGeometry.reverse.asInstanceOf[jts.MultiLineString])

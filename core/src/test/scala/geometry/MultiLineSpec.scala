@@ -1,11 +1,13 @@
 package geometry
 
-import org.specs2.mutable.Specification
-import org.specs2.ScalaCheck
-import org.scalacheck.Prop
-import org.scalacheck.Prop.forAll
+import org.scalatest.{MustMatchers, PropSpec}
+import org.scalatest.prop.PropertyChecks
 
-class MultiLineSpec extends Specification with ScalaCheck with GeometryGenerators {
+class MultiLineSpec
+    extends PropSpec
+    with PropertyChecks
+    with MustMatchers
+    with GeometryGenerators {
 
   val p1 = Point(-77, 39)
   val p2 = Point(-76, 40)
@@ -16,23 +18,30 @@ class MultiLineSpec extends Specification with ScalaCheck with GeometryGenerator
   val closedLine = Line(Array(p1, p2, p3, p4))
   val l = MultiLine(line, closedLine)
 
-  def isValid = Prop.forAll(multilines) { (ml) =>
-    ml.isValid must beTrue
+  property("A Multiline is valid") {
+    forAll(multilines) { (ml) =>
+      ml.isValid mustBe true
+    }
   }
 
-  def reverse = Prop.forAll(multilines) { (ml) =>
-    ml.reverse.reverse must be equalTo (ml)
+  property("Multiline validity check") {
+    forAll(multilines) { (ml) =>
+      ml.isValid mustBe true
+    }
   }
 
-  "A MultiLine" should {
-    "be valid" ! isValid
-    "compute the reverse" ! reverse
-    "have a number of Lines" in {
-      l.numGeometries must be equalTo (2)
+  property("Multiline reverse check") {
+    forAll(multilines) { (ml) =>
+      ml.reverse.reverse mustBe ml
     }
-    "serialize to WKT" in {
-      l.wkt must be equalTo ("MULTILINESTRING ((-77 39, -76 40, -75 38), (-77 39, -76 40, -75 38, -77 39))")
-    }
+  }
+
+  property("line must have 2 points") {
+    l.numGeometries mustBe 2
+  }
+
+  property("Multiline must serialize to WKT") {
+    l.wkt mustBe "MULTILINESTRING ((-77 39, -76 40, -75 38), (-77 39, -76 40, -75 38, -77 39))"
   }
 
 }

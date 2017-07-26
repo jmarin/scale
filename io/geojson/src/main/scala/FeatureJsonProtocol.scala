@@ -1,6 +1,6 @@
 package io.geojson
 
-import com.vividsolutions.jts.{ geom => jts }
+import com.vividsolutions.jts.{geom => jts}
 import spray.json._
 import geometry._
 import feature._
@@ -16,9 +16,12 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
         case "Point" => Point(geom.asInstanceOf[jts.Point]).toJson
         case "LineString" => Line(geom.asInstanceOf[jts.LineString]).toJson
         case "Polygon" => Polygon(geom.asInstanceOf[jts.Polygon]).toJson
-        case "MultiPoint" => MultiPoint(geom.asInstanceOf[jts.MultiPoint]).toJson
-        case "MultiLineString" => MultiLine(geom.asInstanceOf[jts.MultiLineString]).toJson
-        case "MultiPolygon" => MultiPolygon(geom.asInstanceOf[jts.MultiPolygon]).toJson
+        case "MultiPoint" =>
+          MultiPoint(geom.asInstanceOf[jts.MultiPoint]).toJson
+        case "MultiLineString" =>
+          MultiLine(geom.asInstanceOf[jts.MultiLineString]).toJson
+        case "MultiPolygon" =>
+          MultiPolygon(geom.asInstanceOf[jts.MultiPolygon]).toJson
       }
       val values = f.values
 
@@ -27,10 +30,11 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
         "geometry" -> geometry,
         "properties" -> JsObject(
           values.keys
-          .filter((k: String) => k != "geometry")
-          .map { k =>
-            k.toString -> toJsValue(values.get(k))
-          }.toMap
+            .filter((k: String) => k != "geometry")
+            .map { k =>
+              k.toString -> toJsValue(values.get(k))
+            }
+            .toMap
         )
       )
     }
@@ -75,11 +79,13 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
 
   }
 
-  implicit object FeatureCollectionFormat extends RootJsonFormat[FeatureCollection] {
+  implicit object FeatureCollectionFormat
+      extends RootJsonFormat[FeatureCollection] {
     def write(fc: FeatureCollection): JsValue = {
       JsObject(
         "type" -> JsString("FeatureCollection"),
-        "features" -> JsArray(fc.features.map(f => FeatureFormat.write(f)).toVector)
+        "features" -> JsArray(
+          fc.features.map(f => FeatureFormat.write(f)).toVector)
       )
     }
 
@@ -90,23 +96,26 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
             FeatureFormat.read(f)
           }.toArray
           FeatureCollection(features)
-        case _ => throw new DeserializationException("GeoJSON FeatureCollection expected")
+        case _ =>
+          throw new DeserializationException(
+            "GeoJSON FeatureCollection expected")
       }
     }
   }
 
   private def toJsValue[T](s: T): JsValue = s match {
-    case Some(v) => v match {
-      case _: Int => JsNumber(v.asInstanceOf[Int])
-      case _: String => JsString(v.asInstanceOf[String])
-      case _: BigDecimal => JsNumber(v.asInstanceOf[BigDecimal])
-      case _: BigInt => JsNumber(v.asInstanceOf[BigInt])
-      case _: Double => JsNumber(v.asInstanceOf[Double])
-      case _: Long => JsNumber(v.asInstanceOf[Long])
-      case _: Boolean => JsBoolean(v.asInstanceOf[Boolean])
-      case _: Array[Char] => JsString(v.toString)
-      case _ => JsNull
-    }
+    case Some(v) =>
+      v match {
+        case _: Int => JsNumber(v.asInstanceOf[Int])
+        case _: String => JsString(v.asInstanceOf[String])
+        case _: BigDecimal => JsNumber(v.asInstanceOf[BigDecimal])
+        case _: BigInt => JsNumber(v.asInstanceOf[BigInt])
+        case _: Double => JsNumber(v.asInstanceOf[Double])
+        case _: Long => JsNumber(v.asInstanceOf[Long])
+        case _: Boolean => JsBoolean(v.asInstanceOf[Boolean])
+        case _: Array[Char] => JsString(v.toString)
+        case _ => JsNull
+      }
     case None => JsNull
   }
 

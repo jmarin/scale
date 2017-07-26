@@ -2,7 +2,7 @@ package geometry
 
 import scala.math.BigDecimal
 import scala.language.implicitConversions
-import com.vividsolutions.jts.{ geom => jts }
+import com.vividsolutions.jts.{geom => jts}
 import jts.Coordinate
 import jts.GeometryFactory
 import jts.PrecisionModel

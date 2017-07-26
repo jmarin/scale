@@ -1,6 +1,6 @@
 package feature
 
-import com.vividsolutions.jts.{ geom => jts }
+import com.vividsolutions.jts.{geom => jts}
 import geometry._
 import feature._
 

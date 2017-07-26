@@ -20,7 +20,9 @@ object FeatureLayer {
 
 }
 
-case class FeatureLayer(name: String, crs: CoordinateReferenceSystem, fc: FeatureCollection) {
+case class FeatureLayer(name: String,
+                        crs: CoordinateReferenceSystem,
+                        fc: FeatureCollection) {
 
   def numFeatures: Int = fc.count
 }

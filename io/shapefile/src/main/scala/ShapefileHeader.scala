@@ -1,7 +1,6 @@
 /**
- * http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
- */
-
+  * http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
+  */
 package io.shapefile
 
 import geometry.Envelope
@@ -62,4 +61,6 @@ object ShapefileHeader {
 
 }
 
-case class ShapefileHeader(length: Int, shapeType: ShapeType, envelope: Envelope)
+case class ShapefileHeader(length: Int,
+                           shapeType: ShapeType,
+                           envelope: Envelope)

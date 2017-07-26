@@ -1,6 +1,6 @@
 package geometry
 
-import com.vividsolutions.jts.{ geom => jts }
+import com.vividsolutions.jts.{geom => jts}
 
 trait GeometryCollection extends Geometry {
 

@@ -1,11 +1,11 @@
 package io.geojson
 
-import org.specs2.mutable.Specification
 import geometry._
 import feature._
+import org.scalatest.{MustMatchers, WordSpec}
 import spray.json._
 
-class FeatureCollectionJsonProtocolSpec extends Specification {
+class FeatureCollectionJsonProtocolSpec extends WordSpec with MustMatchers {
 
   import io.geojson.FeatureJsonProtocol._
 
@@ -22,27 +22,30 @@ class FeatureCollectionJsonProtocolSpec extends Specification {
   val polyWithHoles = Polygon(boundary, ring)
   val id = "1"
   val values = Map("geometry" -> polygon, "DESCRIPTION" -> "First Point")
-  val valuesWithHole = Map("geometry" -> polyWithHoles, "DESCRIPTION" -> "First Point")
-  val schema = Schema(List(Field("geometry", GeometryType()), Field("DESCRIPTION", StringType())))
+  val valuesWithHole =
+    Map("geometry" -> polyWithHoles, "DESCRIPTION" -> "First Point")
+  val schema = Schema(
+    List(Field("geometry", GeometryType()), Field("DESCRIPTION", StringType())))
   val fp = Feature(schema, values)
   val fph = Feature(schema, valuesWithHole)
   val fc = FeatureCollection(fp, fph)
-  val fcJson = """{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-77.0,39.0],[-76.0,40.0],[-75.0,38.0],[-77.0,39.0]]]},"properties":{"DESCRIPTION":"First Point"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-77.0,39.0],[-76.0,40.0],[-75.0,38.0],[-77.0,39.0]],[[-75.7,39.2],[-76.5,39.0],[-76.0,38.5],[-75.7,39.2]]]},"properties":{"DESCRIPTION":"First Point"}}]}"""
+  val fcJson =
+    """{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-77.0,39.0],[-76.0,40.0],[-75.0,38.0],[-77.0,39.0]]]},"properties":{"DESCRIPTION":"First Point"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-77.0,39.0],[-76.0,40.0],[-75.0,38.0],[-77.0,39.0]],[[-75.7,39.2],[-76.5,39.0],[-76.0,38.5],[-75.7,39.2]]]},"properties":{"DESCRIPTION":"First Point"}}]}"""
 
-  "A FeatureCollection" should {
+  "A FeatureCollection" must {
     "write features to GeoJSON" in {
-      fc.toJson.toString must be equalTo (fcJson)
+      fc.toJson.toString mustBe fcJson
     }
     "read GeoJSON into FeatureCollection" in {
       val parsedFC = fc.toJson.convertTo[FeatureCollection]
-      val actual0 = fc.features.toList(0)
+      val actual0 = fc.features.head
       val actual1 = fc.features.toList(1)
-      val expected0 = parsedFC.features.toList(0)
+      val expected0 = parsedFC.features.head
       val expected1 = parsedFC.features.toList(1)
-      expected0.geometry must be equalTo (actual0.geometry)
-      expected0.values must be equalTo (actual0.values)
-      expected1.geometry must be equalTo (actual1.geometry)
-      expected0.values must be equalTo (actual0.values)
+      expected0.geometry mustBe actual0.geometry
+      expected0.values mustBe actual0.values
+      expected1.geometry mustBe actual1.geometry
+      expected0.values mustBe actual0.values
     }
   }
 
