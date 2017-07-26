@@ -14,7 +14,7 @@ lazy val scale = Project(
   "scale",
   file("."),
   settings = scaleSettings
-).aggregate(core, shp, geojson)
+).aggregate(core, shp, geojson, vectorTiles)
 
 lazy val core = Project(
   "scale-core",
@@ -34,3 +34,13 @@ lazy val geojson = Project(
   file("io/geojson"),
   settings = scaleSettings ++ Seq(libraryDependencies ++= geojsonDeps)
 ).dependsOn(core)
+
+lazy val vectorTiles = Project(
+  "scale-vector-tiles",
+  file("vector-tiles"),
+  settings = scaleSettings ++ Seq(
+    PB.targets in Compile := Seq(
+      scalapb.gen() -> (sourceManaged in Compile).value
+    )
+  )
+)
