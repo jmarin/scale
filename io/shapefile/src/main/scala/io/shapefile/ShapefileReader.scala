@@ -1,16 +1,12 @@
 package io.shapefile
 
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
-
 import java.io._
+import java.nio.{ByteBuffer, ByteOrder}
+import java.nio.file.{Files, Paths}
 
-import geometry.Envelope
-import feature._
-import scala.collection.mutable.ArrayBuffer
 import com.linuxense.javadbf._
+import feature._
+import geometry.Envelope
 
 object ShapefileReader {
 
@@ -209,10 +205,10 @@ object ShapefileReader {
     row.map { value =>
       value match {
         case i: java.lang.Integer => i.asInstanceOf[Integer]
-        case s: java.lang.String => s.asInstanceOf[String].trim
-        case d: java.lang.Double => d.asInstanceOf[Double]
+        case s: java.lang.String  => s.asInstanceOf[String].trim
+        case d: java.lang.Double  => d.asInstanceOf[Double]
         case b: java.lang.Boolean => b.asInstanceOf[Boolean]
-        case dd: java.util.Date => dd
+        case dd: java.util.Date   => dd
       }
     }.toList
   }

@@ -2,8 +2,8 @@ package io.geojson
 
 import java.nio.file.FileSystems
 
-import geometry._
 import feature._
+import geometry._
 import org.scalatest.{MustMatchers, WordSpec}
 
 class GeoJsonReaderSpec extends WordSpec with MustMatchers {

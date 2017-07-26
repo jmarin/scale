@@ -1,15 +1,12 @@
 package io.geojson
 
-import org.scalacheck.Prop
-import org.scalacheck.Prop.forAll
-import geometry._
 import feature._
+import geometry._
 import org.scalatest.{MustMatchers, WordSpec}
 import spray.json._
+import io.geojson.FeatureJsonProtocol._
 
 class FeatureJsonProtocolSpec extends WordSpec with MustMatchers {
-
-  import io.geojson.FeatureJsonProtocol._
 
   val schema = Schema(
     Field("geometry", GeometryType()),
@@ -32,9 +29,9 @@ class FeatureJsonProtocolSpec extends WordSpec with MustMatchers {
     }
     "read GeoJSON into a Feature" in {
       val f = f1.toJson.convertTo[Feature]
-      f.geometry mustBe (f1.geometry)
-      f.schema mustBe (f1.schema)
-      f.values mustBe (f1.values)
+      f.geometry mustBe f1.geometry
+      f.schema mustBe f1.schema
+      f.values mustBe f1.values
     }
   }
 

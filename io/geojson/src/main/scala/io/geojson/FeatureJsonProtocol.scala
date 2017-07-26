@@ -1,21 +1,20 @@
 package io.geojson
 
 import com.vividsolutions.jts.{geom => jts}
-import spray.json._
-import geometry._
 import feature._
+import geometry._
+import spray.json._
+import GeometryJsonProtocol._
 
 object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
-
-  import GeometryJsonProtocol._
 
   implicit object FeatureFormat extends RootJsonFormat[Feature] {
     def write(f: Feature): JsValue = {
       val geom = f.geometry.jtsGeometry
       val geometry = f.geometry.geometryType match {
-        case "Point" => Point(geom.asInstanceOf[jts.Point]).toJson
+        case "Point"      => Point(geom.asInstanceOf[jts.Point]).toJson
         case "LineString" => Line(geom.asInstanceOf[jts.LineString]).toJson
-        case "Polygon" => Polygon(geom.asInstanceOf[jts.Polygon]).toJson
+        case "Polygon"    => Polygon(geom.asInstanceOf[jts.Polygon]).toJson
         case "MultiPoint" =>
           MultiPoint(geom.asInstanceOf[jts.MultiPoint]).toJson
         case "MultiLineString" =>
@@ -47,11 +46,11 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
             val k = x._1
             val v = x._2 match {
               case JsString(s) => StringType()
-              case JsNull => StringType()
-              case JsTrue => BooleanType()
-              case JsFalse => BooleanType()
+              case JsNull      => StringType()
+              case JsTrue      => BooleanType()
+              case JsFalse     => BooleanType()
               case JsNumber(n) => DoubleType()
-              case JsArray(_) => StringType()
+              case JsArray(_)  => StringType()
               case JsObject(_) => StringType()
             }
             Field(k, v)
@@ -61,11 +60,11 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
           val values = props.asJsObject.fields.map { x =>
             val v = x._2 match {
               case JsString(s) => s.toString
-              case JsNull => None
-              case JsTrue => true
-              case JsFalse => false
+              case JsNull      => None
+              case JsTrue      => true
+              case JsFalse     => false
               case JsNumber(n) => n
-              case _ => None
+              case _           => None
             }
             (x._1, v)
           }
@@ -106,15 +105,15 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
   private def toJsValue[T](s: T): JsValue = s match {
     case Some(v) =>
       v match {
-        case _: Int => JsNumber(v.asInstanceOf[Int])
-        case _: String => JsString(v.asInstanceOf[String])
-        case _: BigDecimal => JsNumber(v.asInstanceOf[BigDecimal])
-        case _: BigInt => JsNumber(v.asInstanceOf[BigInt])
-        case _: Double => JsNumber(v.asInstanceOf[Double])
-        case _: Long => JsNumber(v.asInstanceOf[Long])
-        case _: Boolean => JsBoolean(v.asInstanceOf[Boolean])
+        case _: Int         => JsNumber(v.asInstanceOf[Int])
+        case _: String      => JsString(v.asInstanceOf[String])
+        case _: BigDecimal  => JsNumber(v.asInstanceOf[BigDecimal])
+        case _: BigInt      => JsNumber(v.asInstanceOf[BigInt])
+        case _: Double      => JsNumber(v.asInstanceOf[Double])
+        case _: Long        => JsNumber(v.asInstanceOf[Long])
+        case _: Boolean     => JsBoolean(v.asInstanceOf[Boolean])
         case _: Array[Char] => JsString(v.toString)
-        case _ => JsNull
+        case _              => JsNull
       }
     case None => JsNull
   }
@@ -122,22 +121,22 @@ object FeatureJsonProtocol extends DefaultJsonProtocol with NullOptions {
   private def fromJsValue(v: JsValue): Any = v match {
     case JsString(s) => s.toString
     case JsNumber(s) => s
-    case JsTrue => true
-    case JsFalse => false
-    case JsNull => None
-    case _ => v.toString
+    case JsTrue      => true
+    case JsFalse     => false
+    case JsNull      => None
+    case _           => v.toString
   }
 
   private def toGeometry(json: JsValue): Geometry = {
     json.asJsObject.getFields("type", "coordinates") match {
       case Seq(JsString(geomType), props: JsValue) =>
         geomType match {
-          case "Point" => json.toJson.convertTo[Point]
-          case "LineString" => json.toJson.convertTo[Line]
-          case "Polygon" => json.toJson.convertTo[Polygon]
-          case "MultiPoint" => json.toJson.convertTo[MultiPoint]
+          case "Point"           => json.toJson.convertTo[Point]
+          case "LineString"      => json.toJson.convertTo[Line]
+          case "Polygon"         => json.toJson.convertTo[Polygon]
+          case "MultiPoint"      => json.toJson.convertTo[MultiPoint]
           case "MultiLineString" => json.toJson.convertTo[MultiLine]
-          case "MultiPolygon" => json.toJson.convertTo[MultiPolygon]
+          case "MultiPolygon"    => json.toJson.convertTo[MultiPolygon]
         }
       case _ => throw new DeserializationException("GeoJSON expected")
     }

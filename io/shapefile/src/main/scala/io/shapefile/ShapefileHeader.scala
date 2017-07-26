@@ -3,12 +3,10 @@
   */
 package io.shapefile
 
+import java.nio.{ByteBuffer, ByteOrder}
+import java.nio.file.{Files, Paths}
+
 import geometry.Envelope
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.file.Path
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 
 object ShapefileHeader {
 
@@ -31,11 +29,11 @@ object ShapefileHeader {
 
     val shapeCode = bb.getInt(32)
     val shapeType = shapeCode match {
-      case 0 => NullShape()
-      case 1 => Point()
-      case 3 => PolyLine()
-      case 5 => Polygon()
-      case 8 => MultiPoint()
+      case 0  => NullShape()
+      case 1  => Point()
+      case 3  => PolyLine()
+      case 5  => Polygon()
+      case 8  => MultiPoint()
       case 11 => PointZ()
       case 13 => PolyLineZ()
       case 15 => PolygonZ()

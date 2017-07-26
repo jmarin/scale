@@ -1,9 +1,8 @@
 package io.geojson
 
 import com.vividsolutions.jts.{geom => jts}
-import spray.json._
 import geometry._
-import feature._
+import spray.json._
 
 object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
 
@@ -99,8 +98,7 @@ object GeometryJsonProtocol extends DefaultJsonProtocol with NullOptions {
           val lines = toLines(l)
           MultiLine(lines.toArray)
         case _ =>
-          throw new DeserializationException(
-            "MultiLineString GeoJSON expected")
+          throw new DeserializationException("MultiLineString GeoJSON expected")
       }
     }
   }

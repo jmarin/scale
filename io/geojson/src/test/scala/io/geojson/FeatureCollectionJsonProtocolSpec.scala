@@ -1,13 +1,12 @@
 package io.geojson
 
-import geometry._
 import feature._
+import geometry._
 import org.scalatest.{MustMatchers, WordSpec}
 import spray.json._
+import io.geojson.FeatureJsonProtocol._
 
 class FeatureCollectionJsonProtocolSpec extends WordSpec with MustMatchers {
-
-  import io.geojson.FeatureJsonProtocol._
 
   val p1 = Point(-77, 39)
   val p2 = Point(-76, 40)
