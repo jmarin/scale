@@ -1,7 +1,11 @@
 package geometry
 
+import java.util
+
 import com.vividsolutions.jts.index.strtree.STRtree
 import feature.Feature
+
+import scala.collection.JavaConverters
 
 object RTree {
 
@@ -18,9 +22,11 @@ object RTree {
 
 case class RTree(jtsRTree: STRtree) {
 
-  def query(envelope: Envelope): Traversable[Feature] = {
+  def query(envelope: Envelope): Iterable[Feature] = {
     val e = envelope.jtsEnvelope
-    jtsRTree.query(e).asInstanceOf[Traversable[Feature]]
+    val list: util.ArrayList[Feature] =
+      jtsRTree.query(e).asInstanceOf[util.ArrayList[Feature]]
+    JavaConverters.collectionAsScalaIterable(list)
   }
 
 }
