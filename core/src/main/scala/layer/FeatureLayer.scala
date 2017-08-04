@@ -1,13 +1,7 @@
 package layer
 
 import feature._
-import org.osgeo.proj4j.{
-  CRSFactory,
-  CoordinateReferenceSystem,
-  CoordinateTransformFactory,
-  CoordinateTransform,
-  ProjCoordinate
-}
+import org.osgeo.proj4j.{CRSFactory, CoordinateReferenceSystem}
 
 object FeatureLayer {
 
@@ -20,7 +14,9 @@ object FeatureLayer {
 
 }
 
-case class FeatureLayer(name: String, crs: CoordinateReferenceSystem, fc: FeatureCollection) {
+case class FeatureLayer(name: String,
+                        crs: CoordinateReferenceSystem,
+                        fc: FeatureCollection) {
 
   def numFeatures: Int = fc.count
 }

@@ -1,6 +1,6 @@
 package geometry
 
-import com.vividsolutions.jts.{ geom => jts }
+import com.vividsolutions.jts.{geom => jts}
 
 trait Geometry {
 
@@ -73,7 +73,8 @@ trait Geometry {
       case "Line" => Line(geom.asInstanceOf[jts.LineString])
       case "Polygon" => Polygon(geom.asInstanceOf[jts.Polygon])
       case "MultiPoint" => MultiPoint(geom.asInstanceOf[jts.MultiPoint])
-      case "MultiLineString" => MultiLine(geom.asInstanceOf[jts.MultiLineString])
+      case "MultiLineString" =>
+        MultiLine(geom.asInstanceOf[jts.MultiLineString])
       case "MultiPolygon" => MultiPolygon(geom.asInstanceOf[jts.MultiPolygon])
     }
   }

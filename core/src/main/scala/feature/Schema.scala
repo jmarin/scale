@@ -24,4 +24,3 @@ object Schema {
 case class Schema(fields: Iterable[Field]) {
   def numFields: Int = fields.size
 }
-

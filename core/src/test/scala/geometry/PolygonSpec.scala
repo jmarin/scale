@@ -1,8 +1,8 @@
 package geometry
 
-import org.specs2.mutable.Specification
+import org.scalatest.{MustMatchers, WordSpec}
 
-class PolygonSpec extends Specification {
+class PolygonSpec extends WordSpec with MustMatchers {
 
   val p1 = Point(-77, 39)
   val p2 = Point(-76, 40)
@@ -19,32 +19,32 @@ class PolygonSpec extends Specification {
   val ring = Line(p6, p7, p8, p6)
   val polyWithHole = Polygon(boundary, ring)
 
-  "A Polygon" should {
+  "A Polygon" must {
     "be valid" in {
-      polygon.isValid must beTrue
-      polygonFromLine.isValid must beTrue
-      hole.isValid must beTrue
+      polygon.isValid mustBe true
+      polygonFromLine.isValid mustBe true
+      hole.isValid mustBe true
     }
     "have a perimeter" in {
-      polygon.perimeter must be greaterThan (0)
-      polygonFromLine.perimeter must be greaterThan (0)
+      polygon.perimeter.toLong must be > 0L
+      polygonFromLine.perimeter.toLong must be > 0L
     }
     "have an area" in {
-      polygon.area must be greaterThan (0)
-      polygonFromLine.area must be greaterThan (0)
+      polygon.area.toLong must be > 0L
+      polygonFromLine.area.toLong must be > 0L
     }
     "be able to contain holes" in {
-      polyWithHole.isValid must beTrue
+      polyWithHole.isValid mustBe true
     }
     "serialize to WKT" in {
-      polygon.wkt must be equalTo ("POLYGON ((-77 39, -76 40, -75 38, -77 39))")
-      polygonFromLine.wkt must be equalTo ("POLYGON ((-77 39, -76 40, -75 38, -77 39))")
+      polygon.wkt mustBe "POLYGON ((-77 39, -76 40, -75 38, -77 39))"
+      polygonFromLine.wkt mustBe "POLYGON ((-77 39, -76 40, -75 38, -77 39))"
     }
     "get external boundary as line" in {
-      polygon.boundary must be equalTo (Line(p1, p2, p3, p1))
+      polygon.boundary mustBe Line(p1, p2, p3, p1)
     }
     "get interior rings as list of lines" in {
-      polyWithHole.holes.size must be equalTo (1)
+      polyWithHole.holes.length mustBe 1
     }
   }
 

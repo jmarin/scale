@@ -4,9 +4,10 @@ scala:
 - 2.11.4
 jdk:
 - oraclejdk8
-- oraclejdk7
-script: "sbt clean coverage test && sbt coverageAggregate"
-after_success: "sbt coveralls"
+script:
+  - sbt clean coverage test 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 env:
   global:
     secure: ltk66js4TiWFVYsauLVx//bZvKRo7co04TkeAgGT5SwTCGLzFCZIRFR3RCCpBXzb0YZ1IYMzi1uXHu6F8xG2x+RtLp0iruhefXAOIzn1jsk/FrGKnh4/UPhRKuiZdYW/RiO6/q+E0/7nRvDCmam9k06j3uhBytgGkgjRbZfsHlk=

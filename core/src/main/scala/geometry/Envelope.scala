@@ -1,14 +1,15 @@
 package geometry
 
-import com.vividsolutions.jts.{ geom => jts }
+import com.vividsolutions.jts.{geom => jts}
 
 object Envelope {
 
   def apply(p1: Point, p2: Point): Envelope = {
-    Envelope(new jts.Envelope(
-      p1.jtsGeometry.asInstanceOf[jts.Point].getCoordinate,
-      p2.jtsGeometry.asInstanceOf[jts.Point].getCoordinate
-    ))
+    Envelope(
+      new jts.Envelope(
+        p1.jtsGeometry.asInstanceOf[jts.Point].getCoordinate,
+        p2.jtsGeometry.asInstanceOf[jts.Point].getCoordinate
+      ))
   }
 
   def apply(xmin: Double, ymin: Double, xmax: Double, ymax: Double): Envelope = {

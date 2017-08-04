@@ -1,8 +1,7 @@
 package geometry
 
 import scala.language.implicitConversions
-import com.vividsolutions.jts.{ geom => jts }
-import jts.GeometryFactory
+import com.vividsolutions.jts.{geom => jts}
 
 object Polygon {
 
@@ -13,14 +12,16 @@ object Polygon {
   }
 
   def apply(points: Traversable[Point]): Polygon = {
-    val ring = geomFactory.createLinearRing(Util.points2JTSCoordinates(points).toArray)
+    val ring =
+      geomFactory.createLinearRing(Util.points2JTSCoordinates(points).toArray)
     //require(ring.isValid)
     Polygon(new jts.Polygon(ring, null, geomFactory))
   }
 
   def apply(points: Traversable[Point], srid: Int): Polygon = {
     val gf = new jts.GeometryFactory(null, srid)
-    val ring = geomFactory.createLinearRing(Util.points2JTSCoordinates(points).toArray)
+    val ring =
+      geomFactory.createLinearRing(Util.points2JTSCoordinates(points).toArray)
     //require(ring.isValid)
     Polygon(new jts.Polygon(ring, null, gf))
   }
@@ -38,9 +39,11 @@ object Polygon {
       Util.points2JTSCoordinates(exterior.points).toArray
     )
     //require(exteriorRing.isValid)
-    val holes = interior.map(i => geomFactory.createLinearRing(
-      Util.points2JTSCoordinates(i.points).toArray
-    ))
+    val holes = interior.map(
+      i =>
+        geomFactory.createLinearRing(
+          Util.points2JTSCoordinates(i.points).toArray
+      ))
     //holes.foreach(h => require(h.isValid))
     Polygon(new jts.Polygon(exteriorRing, holes, geomFactory))
   }
@@ -51,9 +54,11 @@ object Polygon {
       Util.points2JTSCoordinates(exterior.points).toArray
     )
     //require(exteriorRing.isValid)
-    val holes = interior.map(i => gf.createLinearRing(
-      Util.points2JTSCoordinates(i.points).toArray
-    ))
+    val holes = interior.map(
+      i =>
+        gf.createLinearRing(
+          Util.points2JTSCoordinates(i.points).toArray
+      ))
     //    holes.foreach(h => require(h.isValid))
     Polygon(new jts.Polygon(exteriorRing, holes, gf))
   }
@@ -84,12 +89,13 @@ case class Polygon(jtsGeometry: jts.Polygon) extends Geometry {
     val gf = jtsGeometry.getFactory
     val numHoles = jtsGeometry.getNumInteriorRing
 
-    def loop(list: List[jts.LineString], n: Int): List[jts.LineString] = n match {
-      case 0 => list
-      case _ =>
-        val hole = jtsGeometry.getInteriorRingN(n - 1)
-        loop(hole :: list, n - 1)
-    }
+    def loop(list: List[jts.LineString], n: Int): List[jts.LineString] =
+      n match {
+        case 0 => list
+        case _ =>
+          val hole = jtsGeometry.getInteriorRingN(n - 1)
+          loop(hole :: list, n - 1)
+      }
 
     val rings = loop(Nil, numHoles)
     rings.map { h =>

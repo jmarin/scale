@@ -1,7 +1,6 @@
 package geometry
 
-import scala.language.implicitConversions
-import com.vividsolutions.jts.{ geom => jts }
+import com.vividsolutions.jts.{geom => jts}
 
 object MultiPoint {
 
@@ -34,4 +33,3 @@ object MultiPoint {
 }
 
 case class MultiPoint(jtsGeometry: jts.MultiPoint) extends GeometryCollection
-

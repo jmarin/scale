@@ -1,11 +1,13 @@
 package geometry
 
-import org.specs2.mutable.Specification
-import org.specs2.ScalaCheck
-import org.scalacheck.Prop
-import org.scalacheck.Prop.forAll
+import org.scalatest.{MustMatchers, PropSpec}
+import org.scalatest.prop.PropertyChecks
 
-class MultiPointSpec extends Specification with ScalaCheck with GeometryGenerators {
+class MultiPointSpec
+    extends PropSpec
+    with PropertyChecks
+    with MustMatchers
+    with GeometryGenerators {
 
   val p1 = Point(-77, 39)
   val p2 = Point(-77, 40)
@@ -13,21 +15,20 @@ class MultiPointSpec extends Specification with ScalaCheck with GeometryGenerato
   val p4 = Point(-76, 39)
   val mp = MultiPoint(p1, p2, p3, p4, p1)
 
-  def isValid = Prop.forAll(multipoints) { (mp: MultiPoint) =>
-    mp.isValid must beTrue
-  }
-
-  def numPoints = Prop.forAll(multipoints) { (mp: MultiPoint) =>
-    mp.numGeometries must beGreaterThanOrEqualTo(0)
-  }
-
-  "A MultiPoint" should {
-    "be valid" ! isValid
-    "have a number of Points" ! numPoints
-    "serialize to WKT" in {
-      mp.wkt must be equalTo ("MULTIPOINT ((-77 39), (-77 40), (-76 40), (-76 39), (-77 39))")
+  property("A Multipoint must be valid") {
+    forAll(multipoints) { (mp: MultiPoint) =>
+      mp.isValid mustBe true
     }
   }
 
-}
+  property("A Multipoint must have a positive number of geometries") {
+    forAll(multipoints) { (mp: MultiPoint) =>
+      mp.numGeometries.toLong must be >= 0L
+    }
+  }
 
+  property("A Multipoint must serialize to WKT") {
+    mp.wkt mustBe "MULTIPOINT ((-77 39), (-77 40), (-76 40), (-76 39), (-77 39))"
+  }
+
+}

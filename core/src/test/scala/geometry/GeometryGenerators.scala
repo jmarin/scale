@@ -1,8 +1,6 @@
 package geometry
 
-import org.scalacheck.{ Arbitrary, Prop, Gen }
-import org.scalacheck.Prop.forAll
-import com.vividsolutions.jts.{ geom => jts }
+import org.scalacheck.Gen
 
 trait GeometryGenerators {
 
@@ -56,5 +54,11 @@ trait GeometryGenerators {
       lines <- Gen.listOf[Line](lines)
     } yield MultiLine(lines)
   }
-}
 
+  def envelopeGen: Gen[Envelope] = {
+    for {
+      p1 <- points
+      p2 <- points
+    } yield Envelope(p1, p2)
+  }
+}

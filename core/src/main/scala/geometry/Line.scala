@@ -1,10 +1,8 @@
 package geometry
 
 import scala.language.implicitConversions
-import com.vividsolutions.jts.{ geom => jts }
-import jts.GeometryFactory
+import com.vividsolutions.jts.{geom => jts}
 import jts.LineString
-import jts.impl.CoordinateArraySequence
 import jts.PrecisionModel
 
 object Line {
@@ -16,14 +14,13 @@ object Line {
   }
 
   def apply(points: Traversable[Point]): Line = {
-    Line(geomFactory.
-      createLineString(Util.points2JTSCoordinates(points).toArray))
+    Line(
+      geomFactory.createLineString(Util.points2JTSCoordinates(points).toArray))
   }
 
   def apply(points: Traversable[Point], srid: Int): Line = {
     val gf = new jts.GeometryFactory(new PrecisionModel, srid)
-    Line(gf.
-      createLineString(Util.points2JTSCoordinates(points).toArray))
+    Line(gf.createLineString(Util.points2JTSCoordinates(points).toArray))
   }
 
   implicit def jtsToLine(jtsGeom: jts.LineString): Line = {
@@ -67,12 +64,16 @@ case class Line(jtsGeometry: jts.LineString) extends Geometry {
   }
 
   def pointAtDist(d: Double): Point = {
-    val coord = new com.vividsolutions.jts.linearref.LengthIndexedLine(jtsGeometry).extractPoint(d)
+    val coord =
+      new com.vividsolutions.jts.linearref.LengthIndexedLine(jtsGeometry)
+        .extractPoint(d)
     Point(coord.x, coord.y)
   }
 
   def pointAtDistWithOffset(d: Double, offset: Double): Point = {
-    val coord = new com.vividsolutions.jts.linearref.LengthIndexedLine(jtsGeometry).extractPoint(d, offset)
+    val coord =
+      new com.vividsolutions.jts.linearref.LengthIndexedLine(jtsGeometry)
+        .extractPoint(d, offset)
     Point(coord.x, coord.y)
   }
 

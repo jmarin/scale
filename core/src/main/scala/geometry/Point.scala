@@ -1,10 +1,7 @@
 package geometry
 
-import scala.math.BigDecimal
 import scala.language.implicitConversions
-import com.vividsolutions.jts.{ geom => jts }
-import jts.Coordinate
-import jts.GeometryFactory
+import com.vividsolutions.jts.{geom => jts}
 import jts.PrecisionModel
 
 object Point {
