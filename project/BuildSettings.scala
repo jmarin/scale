@@ -5,7 +5,7 @@ import sbt._
 object BuildSettings {
   val buildOrganization = "com.github.jmarin"
   val buildVersion = "0.0.3-SNAPSHOT"
-  val buildScalaVersion = "2.12.2"
+  val buildScalaVersion = "2.12.3"
 
   val scaleSettings = Defaults.coreDefaultSettings ++
     xerial.sbt.Sonatype.sonatypeSettings ++
@@ -13,7 +13,7 @@ object BuildSettings {
       organization := buildOrganization,
       version := buildVersion,
       scalaVersion := buildScalaVersion,
-      crossScalaVersions := Seq("2.11.5", "2.12.2"),
+      crossScalaVersions := Seq("2.11.5", buildScalaVersion),
       scalacOptions ++= Seq("-Xlint", "-deprecation", "-unchecked", "-feature"),
       scalacOptions in Test ++= Seq("-Yrangepos"),
       publishMavenStyle := true,
